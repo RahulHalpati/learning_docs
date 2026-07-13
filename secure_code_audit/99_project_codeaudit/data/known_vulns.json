@@ -1,0 +1,38 @@
+{
+  "Flask": [
+    {
+      "id": "CVE-2018-1000656",
+      "fixed_in": "0.12.3",
+      "severity": "medium",
+      "cwe": "CWE-20",
+      "summary": "Denial of service via crafted JSON in Flask before 0.12.3"
+    }
+  ],
+  "PyYAML": [
+    {
+      "id": "CVE-2020-14343",
+      "fixed_in": "5.4",
+      "severity": "high",
+      "cwe": "CWE-502",
+      "summary": "Arbitrary code execution via full/unsafe load in PyYAML before 5.4"
+    }
+  ],
+  "requests": [
+    {
+      "id": "CVE-2018-18074",
+      "fixed_in": "2.20.0",
+      "severity": "medium",
+      "cwe": "CWE-522",
+      "summary": "Credentials leaked to a redirect target in requests before 2.20.0"
+    }
+  ],
+  "Jinja2": [
+    {
+      "id": "CVE-2019-10906",
+      "fixed_in": "2.10.1",
+      "severity": "high",
+      "cwe": "CWE-693",
+      "summary": "Sandbox escape via str.format_map in Jinja2 before 2.10.1"
+    }
+  ]
+}

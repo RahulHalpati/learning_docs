@@ -1,0 +1,6 @@
+Big-O notation for beginners
+Why RAM is faster than a hard disk
+What actually happens when you type a URL and press enter
+The difference between authentication and authorization
+Why you should never store passwords in plain text
+How a hash map gives you O(1) lookups

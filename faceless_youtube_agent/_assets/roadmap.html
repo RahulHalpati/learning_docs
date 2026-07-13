@@ -1,0 +1,328 @@
+<title>Faceless YouTube Studio with LangGraph — Learning Roadmap</title>
+<style>
+  :root {
+    --paper:#f6f4ef; --surface:#ffffff; --ink:#1a1c22; --muted:#6b6a66;
+    --line:#e4e0d7; --line-strong:#d3cec2;
+    --coral:#e8482f; --coral-soft:#fdeae6; --node:#2f6bd6; --node-soft:#e8f0fd;
+    --ok:#2e7d5b;
+    --shadow:0 1px 2px rgba(20,18,14,.05), 0 6px 20px rgba(20,18,14,.06);
+    --radius:14px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper:#13151b; --surface:#1b1e26; --ink:#eceef3; --muted:#9a9ba3;
+      --line:#2a2e39; --line-strong:#39404e;
+      --coral:#ff5b46; --coral-soft:#2b1a17; --node:#5aa2ff; --node-soft:#16202f;
+      --ok:#57c99a;
+      --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px rgba(0,0,0,.35);
+    }
+  }
+  :root[data-theme="light"] {
+    --paper:#f6f4ef; --surface:#ffffff; --ink:#1a1c22; --muted:#6b6a66;
+    --line:#e4e0d7; --line-strong:#d3cec2;
+    --coral:#e8482f; --coral-soft:#fdeae6; --node:#2f6bd6; --node-soft:#e8f0fd;
+    --ok:#2e7d5b; --shadow:0 1px 2px rgba(20,18,14,.05), 0 6px 20px rgba(20,18,14,.06);
+  }
+  :root[data-theme="dark"] {
+    --paper:#13151b; --surface:#1b1e26; --ink:#eceef3; --muted:#9a9ba3;
+    --line:#2a2e39; --line-strong:#39404e;
+    --coral:#ff5b46; --coral-soft:#2b1a17; --node:#5aa2ff; --node-soft:#16202f;
+    --ok:#57c99a; --shadow:0 1px 2px rgba(0,0,0,.3), 0 8px 30px rgba(0,0,0,.35);
+  }
+
+  * { box-sizing:border-box; }
+  html { -webkit-text-size-adjust:100%; }
+  body {
+    margin:0; background:var(--paper); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    line-height:1.6; font-size:17px;
+    -webkit-font-smoothing:antialiased;
+  }
+  .mono { font-family:ui-monospace,"SF Mono","SFMono-Regular",Menlo,Consolas,"Liberation Mono",monospace; }
+  .wrap { max-width:920px; margin:0 auto; padding:0 24px; }
+  .eyebrow {
+    font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+    font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:var(--muted);
+    margin:0 0 14px;
+  }
+  h1,h2,h3 { text-wrap:balance; line-height:1.12; letter-spacing:-.02em; }
+  a { color:var(--coral); text-decoration:none; }
+  a:hover { text-decoration:underline; }
+  :focus-visible { outline:2px solid var(--node); outline-offset:3px; border-radius:4px; }
+
+  /* ---------- hero ---------- */
+  header.hero { padding:80px 0 40px; border-bottom:1px solid var(--line); }
+  h1 { font-size:clamp(34px,6vw,60px); font-weight:800; margin:0 0 18px; }
+  h1 .accent { color:var(--coral); }
+  .lede { font-size:clamp(18px,2.4vw,21px); color:var(--muted); max-width:60ch; margin:0 0 34px; }
+
+  .flow {
+    display:flex; flex-wrap:wrap; align-items:center; gap:8px;
+    padding:18px; background:var(--surface); border:1px solid var(--line);
+    border-radius:var(--radius); box-shadow:var(--shadow);
+    overflow-x:auto;
+  }
+  .chip {
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13px;
+    padding:7px 12px; border-radius:8px; white-space:nowrap;
+    background:var(--node-soft); color:var(--node); border:1px solid transparent;
+  }
+  .chip.io { background:transparent; color:var(--ink); border:1px dashed var(--line-strong); }
+  .chip.out { background:var(--coral-soft); color:var(--coral); }
+  .arrow { color:var(--muted); font-size:14px; user-select:none; }
+
+  .meta-row { display:flex; flex-wrap:wrap; gap:10px; margin-top:22px; }
+  .tag {
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:12.5px;
+    padding:6px 11px; border-radius:999px; border:1px solid var(--line-strong); color:var(--muted);
+  }
+  .tag b { color:var(--ink); font-weight:600; }
+
+  /* ---------- sections ---------- */
+  section { padding:56px 0; border-bottom:1px solid var(--line); }
+  h2 { font-size:clamp(24px,3.4vw,32px); font-weight:750; margin:0 0 6px; }
+  .sub { color:var(--muted); margin:0 0 30px; max-width:62ch; }
+
+  /* ---------- why grid ---------- */
+  .why { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+  @media (max-width:680px){ .why { grid-template-columns:1fr; } }
+  .card {
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:22px; box-shadow:var(--shadow);
+  }
+  .card h3 { margin:0 0 8px; font-size:18px; display:flex; align-items:baseline; gap:10px; }
+  .card.pick h3 .badge { color:var(--coral); }
+  .card p { margin:0; color:var(--muted); font-size:15px; }
+  .badge {
+    font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.1em;
+    text-transform:uppercase; padding:3px 8px; border-radius:6px; background:var(--node-soft); color:var(--node);
+  }
+  .card.pick .badge { background:var(--coral-soft); }
+
+  /* ---------- timeline ---------- */
+  .timeline { position:relative; padding-left:0; }
+  .stage { position:relative; padding:0 0 8px 34px; }
+  .stage::before {
+    content:""; position:absolute; left:9px; top:6px; bottom:-14px; width:2px; background:var(--line-strong);
+  }
+  .stage:last-child::before { display:none; }
+  .stage .dot {
+    position:absolute; left:0; top:3px; width:20px; height:20px; border-radius:50%;
+    background:var(--surface); border:2px solid var(--node);
+  }
+  .stage.cap .dot { border-color:var(--coral); background:var(--coral); }
+  .stage-head { display:flex; align-items:baseline; gap:12px; flex-wrap:wrap; margin-bottom:4px; }
+  .ts { font-family:ui-monospace,Menlo,monospace; font-size:12.5px; color:var(--node); font-variant-numeric:tabular-nums; }
+  .stage.cap .ts { color:var(--coral); }
+  .stage-title { font-weight:700; font-size:19px; }
+  .stage-time { font-family:ui-monospace,Menlo,monospace; font-size:12px; color:var(--muted); margin-left:auto; }
+  .mods { list-style:none; margin:6px 0 30px; padding:0; display:grid; gap:2px; }
+  .mods li { color:var(--muted); font-size:15px; padding:3px 0; }
+  .mods li b { color:var(--ink); font-weight:600; }
+  .mods li .n { font-family:ui-monospace,Menlo,monospace; font-size:12.5px; color:var(--node); margin-right:8px; }
+
+  /* ---------- table ---------- */
+  .tbl-scroll { overflow-x:auto; border:1px solid var(--line); border-radius:var(--radius); box-shadow:var(--shadow); }
+  table { border-collapse:collapse; width:100%; min-width:520px; background:var(--surface); }
+  th,td { text-align:left; padding:13px 16px; border-bottom:1px solid var(--line); font-size:15px; vertical-align:top; }
+  th { font-family:ui-monospace,Menlo,monospace; font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  tr:last-child td { border-bottom:none; }
+  td .now { color:var(--ok); font-weight:600; }
+  td .up { color:var(--node); }
+
+  /* ---------- code ---------- */
+  pre {
+    background:var(--surface); border:1px solid var(--line); border-radius:var(--radius);
+    padding:20px; overflow-x:auto; box-shadow:var(--shadow); margin:0;
+    font-family:ui-monospace,Menlo,Consolas,monospace; font-size:13.5px; line-height:1.7;
+  }
+  pre .c { color:var(--muted); }
+  pre .k { color:var(--coral); }
+
+  .callout {
+    display:flex; gap:14px; padding:18px 20px; border-radius:var(--radius);
+    background:var(--coral-soft); border:1px solid transparent; margin-top:26px;
+  }
+  .callout .bar { width:3px; border-radius:3px; background:var(--coral); flex:none; }
+  .callout p { margin:0; font-size:14.5px; color:var(--ink); }
+  .callout b { color:var(--coral); }
+
+  footer { padding:44px 0 70px; color:var(--muted); font-size:14px; }
+  footer .mono { font-size:12.5px; }
+
+  @media (prefers-reduced-motion:no-preference){
+    .chip.live { animation:pulse 2.6s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{box-shadow:0 0 0 0 transparent;} 50%{box-shadow:0 0 0 3px var(--coral-soft);} }
+  }
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Hands-on course · LangGraph · ~6 hours</p>
+    <h1>Build a <span class="accent">faceless YouTube</span> studio as a LangGraph pipeline</h1>
+    <p class="lede">Hand it a topic. Agents research it, write the script, voice it, render slides,
+      stitch a real <span class="mono">.mp4</span>, and write the SEO metadata — with a human
+      approval gate before anything publishes. Learn LangGraph by building the thing.</p>
+
+    <div class="flow" role="img" aria-label="Pipeline: topic in, then researcher, scriptwriter, voiceover, visuals, assembler, metadata, out to an mp4">
+      <span class="chip io">topic</span><span class="arrow">→</span>
+      <span class="chip">researcher</span><span class="arrow">→</span>
+      <span class="chip">scriptwriter</span><span class="arrow">→</span>
+      <span class="chip live">voiceover</span><span class="arrow">→</span>
+      <span class="chip">visuals</span><span class="arrow">→</span>
+      <span class="chip">assembler</span><span class="arrow">→</span>
+      <span class="chip">metadata</span><span class="arrow">→</span>
+      <span class="chip out">video.mp4</span>
+    </div>
+
+    <div class="meta-row">
+      <span class="tag"><b>Runs offline</b> — no API key</span>
+      <span class="tag">Verified: <b>langgraph 1.1.10</b></span>
+      <span class="tag">Real output: <b>1280×720 h264/aac</b></span>
+      <span class="tag"><b>7</b> tests passing</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The engine question</p>
+    <h2>Why LangGraph — and where Google ADK fits</h2>
+    <p class="sub">You asked to compare both before committing. Module 01-2 does the full side-by-side;
+      here's the verdict. Both are capable and model-agnostic — the pick is about friction and transfer.</p>
+    <div class="why">
+      <div class="card pick">
+        <h3><span class="badge">this course</span> LangGraph</h3>
+        <p>An explicit graph of state → nodes → edges. You're already learning LangChain, a video
+          pipeline <em>is</em> an explicit graph, and its <span class="mono">interrupt_before</span>
+          gate gives you "approve before rendering" in one argument. Biggest tutorial ecosystem.</p>
+      </div>
+      <div class="card">
+        <h3><span class="badge">also great</span> Google ADK</h3>
+        <p>Composed agents — <span class="mono">Sequential/Parallel/Loop</span>. Reach for it when
+          you're on Google Cloud, want managed deployment via Vertex AI Agent Engine, or are
+          standardising on Gemini. The concepts you learn here carry straight over.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The path · read in order</p>
+    <h2>Your production timeline</h2>
+    <p class="sub">Six sections that build one pipeline, then a runnable capstone. The timestamps are the
+      running total, the way chapter markers work on the videos you'll make.</p>
+
+    <div class="timeline">
+      <div class="stage">
+        <span class="dot"></span>
+        <div class="stage-head"><span class="ts">00:00</span><span class="stage-title">Foundations</span><span class="stage-time">~1h 30m</span></div>
+        <ul class="mods">
+          <li><span class="n">01-1</span><b>The pipeline &amp; architecture</b> — the whole thing as a graph</li>
+          <li><span class="n">01-2</span><b>LangGraph vs Google ADK</b> — pick your engine, informed</li>
+          <li><span class="n">01-3</span><b>Environment &amp; providers</b> — install, run offline once</li>
+          <li><span class="n">01-4</span><b>LangGraph refresher</b> — state, nodes, edges, checkpoints</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot"></span>
+        <div class="stage-head"><span class="ts">01:30</span><span class="stage-title">Building the nodes</span><span class="stage-time">~2h 30m</span></div>
+        <ul class="mods">
+          <li><span class="n">02-1</span><b>Shared state</b> — the segment that flows through</li>
+          <li><span class="n">02-2</span><b>Researcher</b> — topic → hook + angle + points</li>
+          <li><span class="n">02-3</span><b>Scriptwriter</b> — structured JSON, parsed defensively</li>
+          <li><span class="n">02-4</span><b>Voiceover</b> — pluggable TTS + offline fallback</li>
+          <li><span class="n">02-5</span><b>Visuals</b> — Pillow slides (swap for AI images / B-roll)</li>
+          <li><span class="n">02-6</span><b>Assembler</b> — ffmpeg slideshow → mp4</li>
+          <li><span class="n">02-7</span><b>Metadata &amp; SEO</b> — title, chapters, tags</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot"></span>
+        <div class="stage-head"><span class="ts">04:00</span><span class="stage-title">Assembling the graph</span><span class="stage-time">~45m</span></div>
+        <ul class="mods">
+          <li><span class="n">03-1</span><b>Wiring the pipeline</b> — partial, edges, one runner</li>
+          <li><span class="n">03-2</span><b>Human-in-the-loop</b> — pause, review, resume (tested)</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot"></span>
+        <div class="stage-head"><span class="ts">04:45</span><span class="stage-title">Publishing &amp; serving</span><span class="stage-time">~45m</span></div>
+        <ul class="mods">
+          <li><span class="n">04-1</span><b>Uploading to YouTube</b> — Data API v3, private by default</li>
+          <li><span class="n">04-2</span><b>CLI &amp; scheduling</b> — automate drafts, never the publish</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot"></span>
+        <div class="stage-head"><span class="ts">05:30</span><span class="stage-title">Quality &amp; shipping</span><span class="stage-time">~35m</span></div>
+        <ul class="mods">
+          <li><span class="n">05-1</span><b>Cost, observability &amp; quality gates</b> — trace &amp; auto-reject</li>
+          <li><span class="n">05-2</span><b>Ethics, policy &amp; scaling</b> — the rules that keep a channel alive</li>
+        </ul>
+      </div>
+      <div class="stage cap">
+        <span class="dot"></span>
+        <div class="stage-head"><span class="ts">06:05</span><span class="stage-title">Capstone — Faceless Studio</span><span class="stage-time">runnable</span></div>
+        <ul class="mods">
+          <li><span class="n">99</span><b>The finished package</b> — one command → a real <span class="mono">.mp4</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The design lesson</p>
+    <h2>Runs now · upgrades later — one node at a time</h2>
+    <p class="sub">Everything runs offline today. Each "real" upgrade is a single-node change; the graph,
+      the state, and every other node stay identical. That swap-ability is the whole point.</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Node</th><th>Runs now (offline)</th><th>Real upgrade</th></tr></thead>
+        <tbody>
+          <tr><td>LLM</td><td class="now">fake / local Ollama</td><td class="up">Claude · OpenAI</td></tr>
+          <tr><td>Voiceover</td><td class="now">ffmpeg track sized to reading time</td><td class="up">pyttsx3 · edge-tts · Piper · ElevenLabs</td></tr>
+          <tr><td>Visuals</td><td class="now">Pillow slides</td><td class="up">SDXL images · stock B-roll</td></tr>
+          <tr><td>Video</td><td class="now">real h264/aac .mp4</td><td class="up">same, at 1080p / 4K</td></tr>
+          <tr><td>Upload</td><td>— (needs OAuth)</td><td class="up">YouTube Data API v3</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Prove your setup in 60 seconds</p>
+    <h2>Quick start</h2>
+    <p class="sub">No API key. Produces a real <span class="mono">out/&lt;slug&gt;/video.mp4</span> and passes the tests.</p>
+<pre><span class="c"># in 99_project_faceless_studio/</span>
+pip install -r requirements.txt        <span class="c"># + system ffmpeg</span>
+
+<span class="c"># offline demo — canned model + silent narration, still a REAL mp4</span>
+STUDIO_LLM=<span class="k">fake</span> python -m faceless_studio.cli <span class="k">"Big-O notation for beginners"</span>
+
+python -m pytest -q                    <span class="c"># 7 passed</span>
+
+<span class="c"># real local model (ollama pull qwen2:7b)</span>
+STUDIO_LLM=<span class="k">ollama</span> python -m faceless_studio.cli <span class="k">"Why RAM is faster than a hard disk"</span></pre>
+
+    <div class="callout">
+      <div class="bar" aria-hidden="true"></div>
+      <p><b>Build it to learn and to speed up honest work — not to spam.</b> YouTube requires you to
+        disclose AI-generated content and doesn't monetise mass-produced, repetitive uploads. The
+        pipeline is designed for it: it stops at a finished file, upload is a separate private-by-default
+        step, and there are two human gates. Your editorial judgement is the moat.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><span class="mono">docs/learning/faceless_youtube_agent/</span> — start at the README → 00 · Introduction.
+      Part of the hands-on engineering guides collection, alongside LangChain &amp; RAG and the LangGraph Proposal Agent.</p>
+  </div>
+</footer>

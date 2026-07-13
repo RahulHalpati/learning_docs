@@ -1,0 +1,11 @@
+# generated video artifacts
+out/
+# OAuth secrets — never commit these
+client_secret.json
+token.json
+.env
+# python
+__pycache__/
+*.pyc
+.venv/
+.pytest_cache/

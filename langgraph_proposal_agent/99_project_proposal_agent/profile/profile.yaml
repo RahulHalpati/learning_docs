@@ -1,0 +1,44 @@
+# YOUR profile — this is what makes proposals personal.
+# Edit everything below to describe yourself; the Profile Matcher agent reads it
+# to pick your best-matching project and ground the proposal in real evidence.
+
+name: Meet Patel
+title: Python & AI Engineer
+years_experience: 4
+tone: confident and direct, friendly, no fluff
+
+skills:
+  - Python
+  - FastAPI
+  - LangChain
+  - LangGraph
+  - RAG (retrieval-augmented generation)
+  - REST API design
+  - Docker
+  - PostgreSQL
+  - pytest / testing
+
+projects:
+  - name: Typed Python SDK (pokesdk)
+    description: >
+      Designed and published a typed, async-ready Python API client library with
+      retries, pagination, a clean error hierarchy, a full test suite, and CI to PyPI.
+    tech: [Python, httpx, Pydantic, pytest, hatchling]
+
+  - name: RAG document assistant
+    description: >
+      Built a "chat with your documents" assistant using LangChain — local embeddings,
+      a vector store, retrieval, and grounded answers that cite their sources.
+    tech: [Python, LangChain, embeddings, vector store]
+
+  - name: Real-time streaming AI chat
+    description: >
+      Built a FastAPI service that streams an LLM's response token-by-token to the
+      browser over WebSockets, with async I/O throughout.
+    tech: [Python, FastAPI, WebSockets, async]
+
+  - name: Multi-agent proposal generator
+    description: >
+      Built a LangGraph multi-agent system (analyzer, matcher, writer, reviewer) that
+      turns a job posting into a tailored proposal in seconds.
+    tech: [Python, LangGraph, LangChain]

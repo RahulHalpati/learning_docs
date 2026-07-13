@@ -1,0 +1,6 @@
+# Deliberately OLD, known-vulnerable pins so the SCA demo has something to find.
+# Do not use these versions in real projects.
+Flask==0.12.2
+PyYAML==5.3.1
+requests==2.19.0
+Jinja2==2.10

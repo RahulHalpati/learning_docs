@@ -1,0 +1,16 @@
+# --- core ---
+# NONE. The auditor runs on the Python standard library only (ast, tokenize, re).
+# That's the whole point: a SAST tool you can read end to end with zero deps.
+
+# --- dev ---
+pytest>=8.0
+
+# --- optional: compare against industry scanners (Section 04) ---
+# bandit                 # pip install bandit    → bandit -r samples/vulnerable_app
+# semgrep                # pip install semgrep   → semgrep --config auto samples/
+# pip-audit              # pip install pip-audit → pip-audit -r samples/vulnerable_app/requirements.txt
+
+# --- optional: real LLM triage for `--explain` (Section 05; default is offline fake) ---
+# langchain-ollama       # local model, no API key (CODEAUDIT_LLM=ollama)
+# langchain-anthropic    # Claude
+# langchain-openai       # OpenAI / compatible

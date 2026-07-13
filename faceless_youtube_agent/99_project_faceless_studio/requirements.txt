@@ -1,0 +1,22 @@
+# --- core (required) ---
+langgraph==1.1.10
+langchain-core==1.4.7
+Pillow>=10.0            # slide rendering; 10+ gives scalable default font
+# ffmpeg is a system binary, not a pip package: `sudo apt install ffmpeg`
+
+# --- LLM providers (pick what you use; the pipeline falls back to a fake model) ---
+langchain-ollama==1.1.0        # local, no API key  (default)
+# langchain-anthropic          # Claude
+# langchain-openai             # OpenAI / compatible
+
+# --- optional real text-to-speech (the pipeline works without any of these) ---
+# pyttsx3                      # offline OS voices
+# gTTS                         # Google TTS (online)
+# edge-tts                     # Microsoft neural voices (online, free)
+
+# --- optional: real YouTube upload (publish.py) ---
+# google-api-python-client
+# google-auth-oauthlib
+
+# --- dev ---
+pytest>=8.0

@@ -1,0 +1,24 @@
+# Core (required) — verified against these versions
+langchain==1.2.16
+langchain-core==1.3.2
+langchain-community==0.4.1
+langchain-text-splitters==1.1.2
+
+# Real local embeddings (recommended; ~80MB model download on first run)
+langchain-huggingface==1.2.2
+sentence-transformers==5.5.1
+
+# Pick ONE real LLM provider (both optional — the app falls back to a fake model):
+#   local, no API key:
+langchain-ollama==1.1.0
+#   hosted / OpenAI-compatible (e.g. the free NVIDIA endpoint):
+langchain-openai==1.2.1
+#   hosted / Anthropic Claude:
+# langchain-anthropic==1.4.6
+
+# Optional: persist the index to disk (set DOC_ASSISTANT_INDEX_DIR to enable).
+# Without this the app uses the in-memory store and re-embeds on each run.
+# faiss-cpu==1.14.3
+
+# For the testing suite
+pytest==9.0.3

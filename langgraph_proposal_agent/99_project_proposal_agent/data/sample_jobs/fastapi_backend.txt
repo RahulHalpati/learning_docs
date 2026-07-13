@@ -1,0 +1,14 @@
+Title: Build a REST API for our inventory startup
+
+We're a small e-commerce startup and need a Python developer to build a clean REST
+API for our product inventory. Requirements:
+
+- Python + FastAPI
+- PostgreSQL database
+- Endpoints for products, stock levels, and orders
+- Proper validation and error handling
+- Some tests would be great
+- Dockerized so we can deploy easily
+
+Budget: $1,500-$2,500. Timeline: about 2-3 weeks. We value clean, well-tested code
+over fancy features. Please share a relevant example of an API you've built.

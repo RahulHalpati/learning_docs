@@ -1,0 +1,6 @@
+# Verified 2026-06-03. Pin these for a reproducible setup.
+fastapi[standard]==0.136.1
+httpx==0.28.1
+# fastapi[standard] already brings in uvicorn and websockets, but pinned here for clarity:
+uvicorn[standard]==0.46.0
+websockets==16.0

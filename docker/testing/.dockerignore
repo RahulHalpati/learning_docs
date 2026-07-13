@@ -1,0 +1,29 @@
+# Python cache files (auto-generated, not needed in image)
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment (we install deps fresh in container)
+.venv/
+venv/
+env/
+
+# Git history (irrelevant to running the app)
+.git/
+.gitignore
+
+# Development/IDE files
+.idea/
+.vscode/
+*.swp
+
+# Secrets — CRITICAL: never copy these into images!
+.env
+*.key
+*.pem
+secrets/
+
+# Test files (not needed in production image)
+tests/
+*.test.py

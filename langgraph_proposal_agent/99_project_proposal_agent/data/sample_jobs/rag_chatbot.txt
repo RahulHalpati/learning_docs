@@ -1,0 +1,11 @@
+Title: AI chatbot that answers from our company documents
+
+Looking for someone to build a chatbot that can answer employee questions using our
+internal documentation (PDFs and markdown). It should give accurate answers and not
+make things up. Bonus if it can cite which document the answer came from.
+
+Skills: Python, LangChain or similar, some experience with RAG / embeddings.
+We'd prefer it run on our own infrastructure rather than sending docs to a third party.
+
+Budget: flexible for the right person. Start ASAP. Tell us about a similar project
+you've done.
