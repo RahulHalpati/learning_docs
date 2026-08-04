@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: linkstash
+  namespace: linkstash
+spec:
+  # ClusterIP: a stable in-cluster address + DNS name (linkstash.linkstash.svc).
+  # It load-balances across the pods matching the selector.
+  type: ClusterIP
+  selector:
+    app: linkstash
+  ports:
+    - port: 80          # the service port
+      targetPort: 8000  # the container port

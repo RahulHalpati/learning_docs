@@ -1,0 +1,7 @@
+# dev/CI tooling — separate from runtime so it never ships in the image
+-r requirements.txt
+pytest>=8.0
+coverage>=7.0
+ruff>=0.6
+bandit>=1.7          # SAST (see the Secure Code Audit course)
+pip-audit>=2.7       # SCA — dependency CVEs

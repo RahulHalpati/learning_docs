@@ -33,3 +33,4 @@ htmlcov/
 # Secrets — never commit
 .env
 .env.*
+practice

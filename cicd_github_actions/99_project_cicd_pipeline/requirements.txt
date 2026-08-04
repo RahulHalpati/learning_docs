@@ -1,0 +1,2 @@
+# runtime dependencies only — kept minimal so the image stays small
+flask>=3.0

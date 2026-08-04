@@ -1,0 +1,24 @@
+# Values you can override per environment (helm install -f staging.yaml ...).
+# This is the whole point of Helm: one templated chart, many environments.
+replicaCount: 2
+
+image:
+  repository: linkstash
+  tag: local
+  pullPolicy: IfNotPresent
+
+service:
+  port: 80
+  targetPort: 8000
+
+env:
+  HOST: "0.0.0.0"
+  PORT: "8000"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi

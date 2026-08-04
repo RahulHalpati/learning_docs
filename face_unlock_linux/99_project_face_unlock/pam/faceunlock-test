@@ -1,0 +1,12 @@
+# Sandbox PAM service for SAFE testing with pamtester.
+# Install to /etc/pam.d/faceunlock-test  — this service is NOT used by login or
+# sudo, so a mistake here CANNOT lock you out. Test here first, always.
+#
+#   sudo cp faceunlock-test /etc/pam.d/faceunlock-test
+#   pamtester faceunlock-test "$USER" authenticate
+#
+# 'sufficient': if the face hook exits 0, auth succeeds immediately. Otherwise
+# it falls through to pam_unix (your password) — exactly the real design.
+auth       sufficient   pam_exec.so quiet /opt/faceunlock/pam/faceunlock-pam.sh
+auth       required     pam_unix.so
+account    required     pam_unix.so

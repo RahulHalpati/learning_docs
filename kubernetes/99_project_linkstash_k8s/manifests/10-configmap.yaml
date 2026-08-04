@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: linkstash-config
+  namespace: linkstash
+data:
+  # non-secret config injected as env vars (real secrets go in a Secret, see 02-1)
+  HOST: "0.0.0.0"
+  PORT: "8000"

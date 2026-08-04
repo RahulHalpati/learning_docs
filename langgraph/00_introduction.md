@@ -1,197 +1,134 @@
-# 00: Introduction to LangGraph
+# 00 · Introduction to LangGraph
 
-> **Learning Level:** Absolute Beginner  
-> **Prerequisites:** Basic Python, familiarity with LLMs (helpful but not required)  
-> **Time:** 20–30 minutes  
-> **What You'll Learn:** What LangGraph is, why it exists, where it fits in AI architectures, and how to set up your environment  
-> **Last Updated:** 2026-05-05
+> **Level:** Absolute Beginner · **Prerequisites:** basic Python; having seen an LLM API helps but isn't required.
+> **Time:** 25 min · **Verified:** 2026-07-21 (langgraph 1.2.9, langchain-core 1.5.0, Python 3.10)
 
----
+This is the start of your journey into **LangGraph** — the framework that turns an LLM from a one-shot question-answerer into a **reliable, stateful agent** that can reason, loop, use tools, remember, and hand control to a human when it matters.
 
-## Welcome! 👋
-
-This is the beginning of your journey into **LangGraph** — the framework that turns LLMs from simple question-answering machines into **reliable, stateful AI agents** that can reason, loop, use tools, and coordinate with humans.
-
-Don't worry if you're completely new — this guide assumes no prior knowledge of LangGraph and will explain everything step by step.
+No prior LangGraph knowledge is assumed. And you won't need an API key: everything in this course runs **offline** with a deterministic fake model, so you can watch the *graph* work without paying for or waiting on a real LLM.
 
 ---
 
-## 📌 What is LangGraph?
+## Why this matters
 
-**In Simple Terms:**  
-LangGraph is a Python framework that lets you build AI workflows as **graphs** — where each step (node) does something specific, and the connections (edges) decide what happens next. Think of it as a flowchart that an AI follows.
+A raw LLM call is stateless and linear: prompt in, text out. Real applications aren't linear — they retry, branch on results, call tools, ask a human to approve something, and pick up where they left off tomorrow. Bolting that onto a single `llm.invoke()` gets messy fast.
 
-**Real-World Analogy:**  
-Imagine a **hospital emergency room**:
-- A **triage nurse** (first node) evaluates you
-- Based on severity, you're **routed** (conditional edge) to a specialist or general care
-- The doctor might **loop back** to run more tests (cycle in the graph)
-- A pharmacist **picks up** where the doctor left off (state passing between nodes)
-- At any point, a **human supervisor** can intervene (human-in-the-loop)
-
-LangGraph lets you build AI systems that work exactly like this — with branching, looping, state management, and human oversight.
-
-**Why It Matters:**
-- **Career:** LangGraph is the industry standard for production AI agents (used by companies like Elastic, Rakuten, Replit)
-- **Practical:** Build chatbots, automation pipelines, RAG systems, and multi-agent architectures
-- **Skills:** Master stateful AI orchestration — the #1 gap between prototype and production AI
+LangGraph gives you a small, sturdy vocabulary for exactly this: **state**, **nodes**, **edges**. That's the difference between a demo and something you'd put in production — and it's the #1 skill gap between "I made a chatbot" and "I ship agents."
 
 ---
 
-## 🧠 Where Does LangGraph Fit?
+## What is LangGraph?
 
-```
-┌─────────────────────────────────────────────────────────┐
-│                    YOUR APPLICATION                      │
-├─────────────────────────────────────────────────────────┤
-│                                                         │
-│   ┌─────────────┐    ┌──────────────────────────────┐  │
-│   │  LangChain   │    │         LangGraph             │  │
-│   │  (Ingredients)│    │  (The Recipe / Orchestrator)  │  │
-│   │              │    │                              │  │
-│   │  • LLM calls │───▶│  • StateGraph (workflow)     │  │
-│   │  • Tools     │    │  • Nodes (actions)           │  │
-│   │  • Retrievers│    │  • Edges (routing)           │  │
-│   │  • Prompts   │    │  • Checkpointers (memory)    │  │
-│   │  • Loaders   │    │  • Human-in-the-loop         │  │
-│   └─────────────┘    └──────────────────────────────┘  │
-│                                                         │
-├─────────────────────────────────────────────────────────┤
-│   LLM Provider (OpenAI / Ollama / Anthropic / etc.)     │
-└─────────────────────────────────────────────────────────┘
+**In one sentence:** LangGraph lets you build an AI workflow as a **graph** — each step is a *node* that does work, the connections are *edges* that decide what runs next, and a shared *state* carries data through it all. Think of it as a flowchart your program actually executes.
+
+> **Analogy — a hospital emergency room.** A triage nurse (a node) assesses you. Based on severity you're *routed* (a conditional edge) to a specialist or to general care. A doctor might *loop back* for more tests (a cycle). A pharmacist picks up where the doctor left off (state passed along). At any point a supervisor can step in (human-in-the-loop). LangGraph builds systems that work exactly like that.
+
+---
+
+## Where LangGraph fits
+
+LangGraph doesn't replace LangChain — it orchestrates it. Here's who does what in the wider stack:
+
+```mermaid
+flowchart TD
+    subgraph app[Your application]
+        LG["🕸️ LangGraph — the orchestrator<br/>StateGraph · nodes · edges · checkpointers · HITL"]
+    end
+    subgraph comp[LangChain — the components]
+        LC["chat models · tools · retrievers · prompts · loaders"]
+    end
+    OBS["🔍 LangSmith — tracing & evals"]
+    PLAT["☁️ LangGraph Platform — Server · Studio · SDK"]
+
+    LC --> LG
+    LG -.emits traces.-> OBS
+    LG -.deploys to.-> PLAT
+    LG --> LLM["LLM provider — Ollama / OpenAI / Anthropic / …"]
 ```
 
-### The Key Distinction
-
-| Framework | Purpose | Best For |
+| Framework | Purpose | Best for |
 |-----------|---------|----------|
-| **LangChain** | Individual AI components (tools, models, retrievers) | Linear RAG, simple chatbots, rapid prototyping |
-| **LangGraph** | Orchestration of those components into stateful workflows | Complex agents, loops, multi-step reasoning, production systems |
+| **LangChain** | Individual components — models, tools, retrievers, prompts | Linear RAG, simple chatbots, prototyping |
+| **LangGraph** | Orchestration of those components into stateful workflows | Agents, loops, multi-step reasoning, production |
+| **LangSmith** | Observability — tracing, evaluation | Debugging and measuring any of the above |
+| **LangGraph Platform** | Hosting — Server, Studio, SDK | Deploying and operating graphs |
 
-**Mental Model:** LangChain gives you LEGO bricks. LangGraph is the instruction manual that tells you how to assemble them into something complex and reliable.
-
----
-
-## Module Overview
-
-| Module | Topic | What You'll Learn |
-|--------|-------|-------------------|
-| **00** | Introduction (this file) | What LangGraph is, setup, ecosystem |
-| **01** | Core Concepts | State, Nodes, Edges, Graph lifecycle |
-| **02** | Architecture & Internals | How StateGraph works under the hood |
-| **03** | Practical Implementation | Minimal → Advanced code examples |
-| **04** | Real-World Use Cases | Chatbot, RAG agent, automation pipeline |
-| **05** | Pitfalls & Best Practices | Common mistakes, performance, scaling |
-| **06** | Connections & Ecosystem | How LangGraph relates to agents, RAG, memory |
-| **07** | Mini Project | Build a complete Research Assistant agent |
+**Mental model:** LangChain gives you LEGO bricks; LangGraph is the instruction manual that assembles them into something complex *and reliable*.
 
 ---
 
-## Prerequisites and Setup
+## Set up (offline, no API key)
 
-### What You Need
-
-1. **Python 3.11+** — LangGraph requires modern Python for type hints and async support
-2. **An LLM API Key** — OpenAI recommended for learning (or Ollama for local/free)
-3. **A code editor** — VS Code, PyCharm, or any editor you prefer
-
-### Installation Guide
-
-#### Step 1: Create a Virtual Environment
 ```bash
-# Create isolated environment — keeps your system Python clean
-python -m venv langgraph-env
-
-# Activate it
-# Linux/Mac:
-source langgraph-env/bin/activate
-# Windows:
-# langgraph-env\Scripts\activate
+python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+pip install "langgraph==1.2.9" "langchain-core==1.5.0"
 ```
 
-#### Step 2: Install Core Packages
-```bash
-# Install LangGraph + LangChain core + OpenAI integration
-pip install langgraph langchain-openai langchain-core
+That's all you need for every lesson. (Optional, for real local generation later: `pip install langchain-ollama` and `ollama pull qwen2.5:0.5b`.)
 
-# Optional: For local LLMs via Ollama (no API key needed)
-# pip install langchain-ollama
-```
+### Your first graph
 
-#### Step 3: Set Up Your API Key
-```bash
-# Set your OpenAI API key as an environment variable
-export OPENAI_API_KEY="sk-your-key-here"
-
-# Or create a .env file (recommended for projects)
-echo 'OPENAI_API_KEY=sk-your-key-here' > .env
-```
-
-#### Step 4: Verify Installation
 ```python
-# verify_setup.py — Confirms everything works
-from langgraph.graph import StateGraph, START, END
-# What: StateGraph is the main class for building workflows
-# Why: If this import works, LangGraph is installed correctly
-
+# hello_graph.py — the smallest useful LangGraph program.
 from typing import TypedDict
+from langgraph.graph import StateGraph, START, END
 
-# Define a minimal state — just a message
-class SimpleState(TypedDict):
+class State(TypedDict):        # the shared data flowing through the graph
     message: str
 
-# Create the simplest possible graph
-graph = StateGraph(SimpleState)
-
-# Add one node that just passes through
-def hello(state: SimpleState) -> dict:
+def hello(state: State) -> dict:
+    # A node: receives state, returns a PARTIAL update (just the keys it changes).
     return {"message": "LangGraph is working! 🎉"}
 
-graph.add_node("hello", hello)
-graph.add_edge(START, "hello")
-graph.add_edge("hello", END)
+builder = StateGraph(State)    # build-time: declare structure
+builder.add_node("hello", hello)
+builder.add_edge(START, "hello")   # START → hello
+builder.add_edge("hello", END)     # hello → END
 
-# Compile and run
-app = graph.compile()
-result = app.invoke({"message": ""})
-print(result["message"])
-# Expected output: LangGraph is working! 🎉
+app = builder.compile()        # validate + return a runnable
+print(app.invoke({"message": ""}))
 ```
 
----
+**Output (real run):**
+```
+{'message': 'LangGraph is working! 🎉'}
+```
 
-## Key Terms
-
-- **Graph:** A workflow defined as nodes (steps) connected by edges (transitions)
-- **State:** A typed dictionary that carries data through the entire graph execution
-- **Node:** A Python function that receives state, does work, and returns state updates
-- **Edge:** A connection between nodes — can be fixed or conditional
-- **Checkpointer:** A persistence layer that saves graph state (enables memory, resume, time-travel)
-- **Compile:** Locks the graph structure and returns a runnable object
-- **Reducer:** A function that defines how state updates are merged (e.g., append vs. replace)
+You just built a one-node graph: declared state, wrote a node, wired edges from `START` to `END`, compiled, and invoked. Every graph in this course — including a 4-agent research assistant — is that same pattern, scaled up.
 
 ---
 
-## Common Misunderstandings (Before You Start)
+## Key terms (one line each)
+
+- **Graph** — a workflow of nodes connected by edges.
+- **State** — a typed dict carried through the whole run; the single source of truth.
+- **Node** — a function that reads state, does work, returns a partial update.
+- **Edge** — a connection between nodes; fixed or conditional.
+- **Reducer** — how a state update is *merged* (append vs. replace).
+- **Compile** — locks the structure and returns a runnable app.
+- **Checkpointer** — saves state per step; enables memory, resume, and time-travel.
+- **`Command`** — a value a node returns to update state *and* choose where to go next.
+- **`Send`** — dispatches dynamic parallel work (map-reduce fan-out).
+
+---
+
+## Common misconceptions
 
 | ❌ Misconception | ✅ Reality |
 |-----------------|-----------|
-| "LangGraph replaces LangChain" | They're complementary — LangChain = components, LangGraph = orchestration |
-| "It's only for chatbots" | It handles any stateful workflow: ETL, automation, multi-agent systems |
-| "Graphs are complex" | A basic graph is ~20 lines of Python. Complexity is opt-in |
-| "You need OpenAI" | Works with any LLM: Ollama, Anthropic, Google, HuggingFace |
-| "It's just another wrapper" | It provides state management, persistence, and human-in-the-loop — things raw LLM APIs don't |
+| "LangGraph replaces LangChain" | Complementary — LangChain = components, LangGraph = orchestration |
+| "It's only for chatbots" | Any stateful workflow: ETL, automation, multi-agent systems |
+| "Graphs are complex" | A basic graph is ~15 lines. Complexity is opt-in |
+| "You need OpenAI" | Works with any model — this whole course runs on a fake/local model |
+| "It's just a wrapper" | It provides state, persistence, and human-in-the-loop — things raw LLM APIs don't |
 
 ---
 
-## Next Steps
+## Recap & next
 
-→ **Module 01: Core Concepts** — Learn State, Nodes, Edges, and Reducers in depth with hands-on code
+- ✅ LangGraph models workflows as **state → nodes → edges**, executed as a real graph.
+- ✅ It **orchestrates** LangChain components; LangSmith observes them; the Platform hosts them.
+- ✅ You installed it and ran a one-node graph — **offline, no key**.
+- ✅ Self-check: in `hello_graph.py`, why does the node return `{"message": ...}` and not the whole state?
 
----
-
-## Changelog
-
-| Date | Change |
-|------|--------|
-| 2026-05-05 | Initial creation |
+→ Next: **[01 · Foundations](01_foundations/README.md)** — state, nodes, edges, and reducers in depth.

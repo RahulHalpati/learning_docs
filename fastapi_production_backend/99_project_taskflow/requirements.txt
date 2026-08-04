@@ -1,0 +1,29 @@
+# Pinned to the versions this course was verified against (2026-07-27, Python 3.10).
+fastapi[standard]==0.140.8
+uvicorn[standard]==0.51.0
+
+# Data
+sqlalchemy[asyncio]==2.0.51
+alembic==1.18.5
+asyncpg==0.31.0          # Postgres (production)
+aiosqlite==0.22.1        # SQLite (local/tests)
+
+# Config & validation
+pydantic==2.13.4
+pydantic-settings==2.14.2
+email-validator>=2.0     # EmailStr
+
+# Auth
+pyjwt==2.13.0
+pwdlib[bcrypt]==0.3.0
+python-multipart>=0.0.9  # OAuth2 form parsing
+
+# Integrations
+redis==5.3.1
+arq==0.28.0
+prometheus-client>=0.21
+
+# Dev / test
+pytest>=8.0
+pytest-asyncio>=0.24
+httpx==0.28.1

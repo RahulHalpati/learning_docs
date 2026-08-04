@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: linkstash
+  namespace: linkstash
+  labels:
+    app: linkstash
+spec:
+  replicas: 2                      # two pods → rolling updates with no downtime
+  selector:
+    matchLabels:
+      app: linkstash
+  template:
+    metadata:
+      labels:
+        app: linkstash
+    spec:
+      containers:
+        - name: linkstash
+          image: linkstash:local   # built in the CI/CD course, loaded into the cluster
+          imagePullPolicy: IfNotPresent   # use the locally-loaded image, don't pull
+          ports:
+            - containerPort: 8000
+          envFrom:
+            - configMapRef:
+                name: linkstash-config
+          # the scheduler uses requests; limits cap a noisy pod (02-2)
+          resources:
+            requests:
+              cpu: "50m"
+              memory: "64Mi"
+            limits:
+              cpu: "250m"
+              memory: "128Mi"
+          # readiness gates traffic; liveness restarts a hung pod (02-2)
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 2
+            periodSeconds: 5
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 5
+            periodSeconds: 10

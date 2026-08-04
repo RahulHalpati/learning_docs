@@ -1,0 +1,231 @@
+<title>Infrastructure as Code with OpenTofu — Learning Roadmap</title>
+<style>
+  :root{
+    --bg:#f5f5f1; --surface:#ffffff; --ink:#1a1c20; --muted:#5e6169;
+    --line:#e4e2da; --line-strong:#d1cec2;
+    --accent:#b9741a; --accent-soft:#f6ecdc;
+    --add:#2f8f5b; --destroy:#c0392b; --change:#b8860b;
+    --shadow:0 1px 2px rgba(26,28,32,.04), 0 6px 22px rgba(26,28,32,.06);
+    --radius:12px;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg:#0f1216; --surface:#181c22; --ink:#e9ebef; --muted:#969aa4;
+      --line:#242a31; --line-strong:#343c46;
+      --accent:#e7a94b; --accent-soft:#241a10;
+      --add:#54c98a; --destroy:#e8695c; --change:#e0b040;
+      --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 34px rgba(0,0,0,.42);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f5f1; --surface:#ffffff; --ink:#1a1c20; --muted:#5e6169;
+    --line:#e4e2da; --line-strong:#d1cec2; --accent:#b9741a; --accent-soft:#f6ecdc;
+    --add:#2f8f5b; --destroy:#c0392b; --change:#b8860b;
+    --shadow:0 1px 2px rgba(26,28,32,.04), 0 6px 22px rgba(26,28,32,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0f1216; --surface:#181c22; --ink:#e9ebef; --muted:#969aa4;
+    --line:#242a31; --line-strong:#343c46; --accent:#e7a94b; --accent-soft:#241a10;
+    --add:#54c98a; --destroy:#e8695c; --change:#e0b040;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 34px rgba(0,0,0,.42);
+  }
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-size:17px;line-height:1.6;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;}
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px;}
+  a{color:var(--accent);text-decoration:none;} a:hover{text-decoration:underline;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+  h1,h2,h3{text-wrap:balance;line-height:1.14;letter-spacing:-.02em;}
+  .eyebrow{font-family:ui-monospace,Menlo,monospace;font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;}
+
+  header.hero{padding:76px 0 40px;border-bottom:1px solid var(--line);}
+  h1{font-size:clamp(32px,5.6vw,54px);font-weight:800;margin:0 0 16px;}
+  h1 .accent{color:var(--accent);}
+  .lede{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:60ch;margin:0 0 30px;}
+
+  .term{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+  .term .bar{display:flex;gap:7px;align-items:center;padding:10px 14px;border-bottom:1px solid var(--line);}
+  .term .dot{width:11px;height:11px;border-radius:50%;background:var(--line-strong);}
+  .term .cmd{margin-left:8px;color:var(--muted);font-size:13px;}
+  .term pre{margin:0;padding:15px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12.7px;line-height:1.75;}
+  .add{color:var(--add);} .destroy{color:var(--destroy);} .dim{color:var(--muted);} .ok{color:var(--add);font-weight:700;}
+
+  .meta-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px;}
+  .tag{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;padding:6px 11px;border-radius:999px;border:1px solid var(--line-strong);color:var(--muted);}
+  .tag b{color:var(--ink);font-weight:600;}
+
+  section{padding:54px 0;border-bottom:1px solid var(--line);}
+  h2{font-size:clamp(23px,3.2vw,31px);font-weight:750;margin:0 0 6px;}
+  .sub{color:var(--muted);margin:0 0 28px;max-width:64ch;}
+
+  .rail{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:18px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
+  .node{font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:8px 13px;border-radius:8px;background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
+  .node.io{background:transparent;border:1px dashed var(--line-strong);color:var(--ink);}
+  .arr{color:var(--muted);}
+
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:680px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+  .card h3{margin:0 0 8px;font-size:17px;}
+  .card p{margin:0;color:var(--muted);font-size:14.5px;}
+  .card .mono{color:var(--ink);font-size:13px;}
+
+  .stage{position:relative;padding:0 0 6px 32px;}
+  .stage::before{content:"";position:absolute;left:8px;top:6px;bottom:-12px;width:2px;background:var(--line-strong);}
+  .stage:last-child::before{display:none;}
+  .stage .d{position:absolute;left:0;top:3px;width:18px;height:18px;border-radius:50%;background:var(--surface);border:2px solid var(--accent);}
+  .stage.cap .d{background:var(--accent);}
+  .sh{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:3px;}
+  .ts{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .stt{font-weight:700;font-size:18px;}
+  .stm{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);margin-left:auto;}
+  .mods{list-style:none;margin:5px 0 26px;padding:0;display:grid;gap:2px;}
+  .mods li{color:var(--muted);font-size:14.5px;padding:2px 0;}
+  .mods li b{color:var(--ink);font-weight:600;}
+  .mods li .n{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--accent);margin-right:8px;}
+
+  pre.code{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;overflow-x:auto;box-shadow:var(--shadow);margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;font-size:13.5px;line-height:1.7;}
+  pre.code .c{color:var(--muted);} pre.code .k{color:var(--accent);}
+  .callout{display:flex;gap:13px;padding:17px 19px;border-radius:var(--radius);background:var(--accent-soft);margin-top:24px;}
+  .callout .b{width:3px;border-radius:3px;background:var(--accent);flex:none;}
+  .callout p{margin:0;font-size:14.5px;}
+  footer{padding:40px 0 66px;color:var(--muted);font-size:14px;}
+  footer .mono{font-size:12.5px;}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Hands-on course · OpenTofu · ~5.5 hours</p>
+    <h1>Infrastructure you <span class="accent">declare</span>, not click</h1>
+    <p class="lede">Write OpenTofu, run <span class="mono">plan → apply</span>, and watch it provision the
+      linkstash app from the CI/CD course for real — image, network, container — then destroy it.
+      No cloud account: it runs against your local Docker.</p>
+
+    <div class="term">
+      <div class="bar"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="cmd mono">tofu apply</span></div>
+<pre><span class="dim">Plan: 3 to add, 0 to change, 0 to destroy.</span>
+<span class="add">+</span> docker_network.this      <span class="add">created</span>
+<span class="add">+</span> docker_image.this        <span class="add">created</span>
+<span class="add">+</span> docker_container.this    <span class="add">created</span>
+<span class="ok">Apply complete! Resources: 3 added, 0 changed, 0 destroyed.</span>
+
+<span class="dim">$ curl http://127.0.0.1:8088/health</span>
+{"status":"ok","version":"1.2.0"}</pre>
+    </div>
+
+    <div class="meta-row">
+      <span class="tag">OpenTofu <b>v1.12.4</b></span>
+      <span class="tag"><b>apply</b> verified · app served</span>
+      <span class="tag"><b>idempotent</b> — No changes</span>
+      <span class="tag"><b>destroy</b> = 3 destroyed</span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The workflow you live in</p>
+    <h2>init → plan → apply → destroy</h2>
+    <div class="rail" role="img" aria-label="Workflow: write tf, init, plan, apply, state, destroy">
+      <span class="node io">write .tf</span><span class="arr">→</span>
+      <span class="node">tofu init</span><span class="arr">→</span>
+      <span class="node">tofu plan</span><span class="arr">→</span>
+      <span class="node">tofu apply</span><span class="arr">→</span>
+      <span class="node io">state</span><span class="arr">→</span>
+      <span class="node">tofu destroy</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The mental shift</p>
+    <h2>Declare the destination, not the steps</h2>
+    <div class="grid2">
+      <div class="card">
+        <h3>Imperative (a script)</h3>
+        <p>You write the <em>steps</em>. Run it twice and it may fail or duplicate. Drift is invisible.<br>
+          <span class="mono">create X; then Y; then Z</span></p>
+      </div>
+      <div class="card">
+        <h3>Declarative (OpenTofu)</h3>
+        <p>You write the <em>desired state</em>. Run it twice → <b>No changes</b>. <span class="mono">plan</span> shows the diff before anything happens.<br>
+          <span class="mono">this container should exist</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The path · read in order</p>
+    <h2>Four sections, then infra you provisioned</h2>
+    <div>
+      <div class="stage"><span class="d"></span>
+        <div class="sh"><span class="ts">00:00</span><span class="stt">Foundations</span><span class="stm">~1h 35m</span></div>
+        <ul class="mods">
+          <li><span class="n">01-1</span>What IaC is · declarative & idempotent</li>
+          <li><span class="n">01-2</span>Install & first apply</li>
+          <li><span class="n">01-3</span>The HCL language &nbsp;·&nbsp; <span class="n">01-4</span><b>State</b> — the heart</li>
+        </ul>
+      </div>
+      <div class="stage"><span class="d"></span>
+        <div class="sh"><span class="ts">01:35</span><span class="stt">The core workflow</span><span class="stm">~1h 30m</span></div>
+        <ul class="mods">
+          <li><span class="n">02-1</span>Providers & resources</li>
+          <li><span class="n">02-2</span>Variables & outputs &nbsp;·&nbsp; <span class="n">02-3</span>Dependencies & lifecycle</li>
+          <li><span class="n">02-4</span><b>Provisioning linkstash</b> — applied & verified</li>
+        </ul>
+      </div>
+      <div class="stage"><span class="d"></span>
+        <div class="sh"><span class="ts">03:05</span><span class="stt">Modularising</span><span class="stm">~45m</span></div>
+        <ul class="mods">
+          <li><span class="n">03-1</span>Modules — reusable infra</li>
+          <li><span class="n">03-2</span>Workspaces & environments (staging/prod)</li>
+        </ul>
+      </div>
+      <div class="stage"><span class="d"></span>
+        <div class="sh"><span class="ts">03:50</span><span class="stt">Production</span><span class="stm">~1h 10m</span></div>
+        <ul class="mods">
+          <li><span class="n">04-1</span>Remote state & locking</li>
+          <li><span class="n">04-2</span>OpenTofu in CI/CD (plan on PR, apply on merge)</li>
+          <li><span class="n">04-3</span>Best practices & gotchas</li>
+        </ul>
+      </div>
+      <div class="stage cap"><span class="d"></span>
+        <div class="sh"><span class="ts">done</span><span class="stt">Capstone — provision linkstash</span><span class="stm">runnable</span></div>
+        <ul class="mods"><li><span class="n">99</span><b>module + root config</b> that stands up & tears down the app</li></ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The collection comes together</p>
+    <h2>Audit → integrate & deploy → provision</h2>
+    <p class="sub">Three courses, one path from a commit to running software on infrastructure you declared.</p>
+<pre class="code"><span class="c"># Secure Code Audit → find vulns in the source</span>
+codeaudit / bandit / pip-audit
+
+<span class="c"># CI/CD → test, scan, build the image, deploy</span>
+docker build -t <span class="k">linkstash</span> .   →   ci.yml · cd.yml
+
+<span class="c"># OpenTofu (here) → provision where it runs</span>
+tofu apply    <span class="c"># network + image + container → app on :8088</span></pre>
+    <div class="callout"><div class="b" aria-hidden="true"></div>
+      <p><b>Two real bugs this capstone caught:</b> a child module needs its own
+        <span class="mono">required_providers</span> source (or <span class="mono">init</span> fails on hashicorp/docker), and
+        <span class="mono">docker build --load</span> is needed or the provider tries to <em>pull</em> the local image.
+        Both surfaced by reading the error and the plan.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><span class="mono">docs/learning/opentofu_iac/</span> — start at the README → 00 · Introduction.
+      Pairs with the CI/CD course (deploys the app) and Docker (the runtime). Terraform users: it's the same HCL and workflow.</p>
+  </div>
+</footer>

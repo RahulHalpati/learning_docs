@@ -8,6 +8,12 @@ module gives you an honest side-by-side, sketches the *same* video pipeline in
 both, and explains why this course runs on LangGraph. Everything you learn
 transfers if you later switch.
 
+> Want to go deeper on either? There are full hands-on courses for both:
+> **[LangGraph](../../langgraph/)** and **[Google ADK](../../google_adk/)** — the
+> latter's [LangGraph↔ADK bridge](../../google_adk/01_foundations/02_langgraph_vs_adk.md)
+> is a framework-level version of this comparison, and both ship the *same*
+> offline research-assistant capstone for a true side-by-side.
+
 ---
 
 ## The two, in one sentence each

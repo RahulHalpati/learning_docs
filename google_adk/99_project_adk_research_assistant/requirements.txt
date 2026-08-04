@@ -1,0 +1,5 @@
+# Pinned to the versions this course was verified against (2026-07-21).
+google-adk==2.5.0
+litellm==1.93.0        # for ADK_LLM=ollama (local generation)
+# Dev/test:
+pytest>=8.0

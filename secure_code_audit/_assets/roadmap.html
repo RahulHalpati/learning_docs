@@ -1,0 +1,297 @@
+<title>Secure Code Audit & Vulnerability Detection — Learning Roadmap</title>
+<style>
+  :root {
+    --bg:#f5f6f7; --surface:#ffffff; --ink:#161a1d; --muted:#5f676d;
+    --line:#e3e6e8; --line-strong:#d0d5d8;
+    --accent:#0f9b8e; --accent-soft:#e2f4f1;
+    --crit:#d6342c; --high:#e06f1e; --med:#c99a06; --info:#3b7bd4;
+    --shadow:0 1px 2px rgba(16,20,22,.04), 0 6px 22px rgba(16,20,22,.06);
+    --radius:12px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg:#0e1113; --surface:#171b1e; --ink:#e8ecee; --muted:#96a0a6;
+      --line:#242a2e; --line-strong:#333b40;
+      --accent:#2bd4c0; --accent-soft:#10241f;
+      --crit:#ff6a5f; --high:#ff9a4d; --med:#e7c14e; --info:#6fa8f5;
+      --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 34px rgba(0,0,0,.4);
+    }
+  }
+  :root[data-theme="light"]{
+    --bg:#f5f6f7; --surface:#ffffff; --ink:#161a1d; --muted:#5f676d;
+    --line:#e3e6e8; --line-strong:#d0d5d8; --accent:#0f9b8e; --accent-soft:#e2f4f1;
+    --crit:#d6342c; --high:#e06f1e; --med:#c99a06; --info:#3b7bd4;
+    --shadow:0 1px 2px rgba(16,20,22,.04), 0 6px 22px rgba(16,20,22,.06);
+  }
+  :root[data-theme="dark"]{
+    --bg:#0e1113; --surface:#171b1e; --ink:#e8ecee; --muted:#96a0a6;
+    --line:#242a2e; --line-strong:#333b40; --accent:#2bd4c0; --accent-soft:#10241f;
+    --crit:#ff6a5f; --high:#ff9a4d; --med:#e7c14e; --info:#6fa8f5;
+    --shadow:0 1px 2px rgba(0,0,0,.35), 0 10px 34px rgba(0,0,0,.4);
+  }
+
+  *{box-sizing:border-box;}
+  body{margin:0;background:var(--bg);color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    font-size:17px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  .mono{font-family:ui-monospace,"SF Mono",Menlo,Consolas,"Liberation Mono",monospace;}
+  .wrap{max-width:940px;margin:0 auto;padding:0 24px;}
+  a{color:var(--accent);text-decoration:none;}
+  a:hover{text-decoration:underline;}
+  :focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:4px;}
+  h1,h2,h3{text-wrap:balance;line-height:1.14;letter-spacing:-.02em;}
+  .eyebrow{font-family:ui-monospace,Menlo,Consolas,monospace;font-size:12px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--accent);margin:0 0 14px;}
+
+  /* hero */
+  header.hero{padding:76px 0 40px;border-bottom:1px solid var(--line);}
+  h1{font-size:clamp(32px,5.6vw,54px);font-weight:800;margin:0 0 16px;}
+  h1 .accent{color:var(--accent);}
+  .lede{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:60ch;margin:0 0 30px;}
+
+  /* scanner-output card */
+  .scan{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    box-shadow:var(--shadow);overflow:hidden;}
+  .scan .bar{display:flex;align-items:center;gap:7px;padding:11px 15px;border-bottom:1px solid var(--line);}
+  .scan .dot{width:11px;height:11px;border-radius:50%;background:var(--line-strong);}
+  .scan .cmd{margin-left:10px;color:var(--muted);font-size:13px;}
+  .scan pre{margin:0;padding:16px 18px;overflow-x:auto;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:12.7px;line-height:1.7;}
+  .sev{font-weight:700;}
+  .sev.c{color:var(--crit);} .sev.h{color:var(--high);} .sev.m{color:var(--med);}
+  .rid{color:var(--accent);} .loc{color:var(--muted);} .cwe{color:var(--muted);}
+  .total{color:var(--ink);border-top:1px dashed var(--line-strong);display:block;margin-top:8px;padding-top:8px;}
+
+  .meta-row{display:flex;flex-wrap:wrap;gap:9px;margin-top:22px;}
+  .tag{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;padding:6px 11px;border-radius:999px;
+    border:1px solid var(--line-strong);color:var(--muted);}
+  .tag b{color:var(--ink);font-weight:600;}
+
+  section{padding:54px 0;border-bottom:1px solid var(--line);}
+  h2{font-size:clamp(23px,3.2vw,31px);font-weight:750;margin:0 0 6px;}
+  .sub{color:var(--muted);margin:0 0 28px;max-width:64ch;}
+
+  /* pipeline */
+  .pipe{display:flex;flex-wrap:wrap;align-items:center;gap:8px;padding:18px;background:var(--surface);
+    border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow-x:auto;}
+  .node{font-family:ui-monospace,Menlo,monospace;font-size:13px;padding:8px 13px;border-radius:8px;
+    background:var(--accent-soft);color:var(--accent);white-space:nowrap;}
+  .node.io{background:transparent;border:1px dashed var(--line-strong);color:var(--ink);}
+  .arr{color:var(--muted);}
+
+  /* two-families cards */
+  .grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  @media (max-width:680px){.grid2{grid-template-columns:1fr;}}
+  .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px;box-shadow:var(--shadow);}
+  .card h3{margin:0 0 8px;font-size:17px;}
+  .card p{margin:0;color:var(--muted);font-size:14.5px;}
+  .card .mono{color:var(--ink);font-size:13px;}
+
+  /* timeline */
+  .stage{position:relative;padding:0 0 6px 32px;}
+  .stage::before{content:"";position:absolute;left:8px;top:6px;bottom:-12px;width:2px;background:var(--line-strong);}
+  .stage:last-child::before{display:none;}
+  .stage .dot2{position:absolute;left:0;top:3px;width:18px;height:18px;border-radius:50%;
+    background:var(--surface);border:2px solid var(--accent);}
+  .stage.cap .dot2{background:var(--accent);}
+  .stage-head{display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:3px;}
+  .ts{font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--accent);font-variant-numeric:tabular-nums;}
+  .stitle{font-weight:700;font-size:18px;}
+  .stime{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted);margin-left:auto;}
+  .mods{list-style:none;margin:5px 0 26px;padding:0;display:grid;gap:2px;}
+  .mods li{color:var(--muted);font-size:14.5px;padding:2px 0;}
+  .mods li b{color:var(--ink);font-weight:600;}
+  .mods li .n{font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--accent);margin-right:8px;}
+
+  /* comparison */
+  .tbl-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);}
+  table{border-collapse:collapse;width:100%;min-width:520px;background:var(--surface);}
+  th,td{text-align:left;padding:13px 16px;border-bottom:1px solid var(--line);font-size:14.5px;}
+  th{font-family:ui-monospace,Menlo,monospace;font-size:11px;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);}
+  tr:last-child td{border-bottom:none;}
+  td .num{font-family:ui-monospace,Menlo,monospace;font-weight:700;color:var(--ink);font-variant-numeric:tabular-nums;}
+
+  pre.code{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;
+    overflow-x:auto;box-shadow:var(--shadow);margin:0;font-family:ui-monospace,Menlo,Consolas,monospace;
+    font-size:13.5px;line-height:1.7;}
+  pre.code .c{color:var(--muted);} pre.code .k{color:var(--accent);}
+  .callout{display:flex;gap:13px;padding:17px 19px;border-radius:var(--radius);background:var(--accent-soft);margin-top:24px;}
+  .callout .b{width:3px;border-radius:3px;background:var(--accent);flex:none;}
+  .callout p{margin:0;font-size:14.5px;}
+  footer{padding:40px 0 66px;color:var(--muted);font-size:14px;}
+  footer .mono{font-size:12.5px;}
+</style>
+
+<header class="hero">
+  <div class="wrap">
+    <p class="eyebrow">Hands-on course · Python · ~7 hours</p>
+    <h1>Find the bug <span class="accent">before it ships</span></h1>
+    <p class="lede">Learn to audit source code for vulnerabilities — by reading it, by
+      building a static analyzer with the stdlib <span class="mono">ast</span>, and by driving
+      bandit / semgrep / pip-audit. You end with a real, dependency-free scanner you understand
+      line by line.</p>
+
+    <div class="scan">
+      <div class="bar">
+        <span class="dot"></span><span class="dot"></span><span class="dot"></span>
+        <span class="cmd mono">python -m codeaudit.cli samples/vulnerable_app</span>
+      </div>
+<pre>🔴 <span class="sev c">CRITICAL</span> <span class="rid">CA101</span>  <span class="loc">app.py:76</span>  eval() — arbitrary code execution      <span class="cwe">(CWE-95)</span>
+🟠 <span class="sev h">HIGH</span>     <span class="rid">CA201</span>  <span class="loc">app.py:32</span>  user input reaches SQL execute()       <span class="cwe">(CWE-89)</span>
+🟠 <span class="sev h">HIGH</span>     <span class="rid">CA102</span>  <span class="loc">app.py:52</span>  subprocess(..., shell=True)            <span class="cwe">(CWE-78)</span>
+🟠 <span class="sev h">HIGH</span>     <span class="rid">CA104</span>  <span class="loc">app.py:83</span>  pickle.loads() on untrusted data       <span class="cwe">(CWE-502)</span>
+🟡 <span class="sev m">MEDIUM</span>   <span class="rid">CA202</span>  <span class="loc">app.py:63</span>  user input reaches open() — traversal  <span class="cwe">(CWE-22)</span>
+<span class="total mono">── 14 findings (2 critical, 7 high, 5 medium) · verified on Python 3.10.12 ──</span></pre>
+    </div>
+
+    <div class="meta-row">
+      <span class="tag"><b>Zero dependencies</b> — stdlib ast</span>
+      <span class="tag">Runs <b>offline</b>, no API key</span>
+      <span class="tag"><b>16</b> tests passing</span>
+      <span class="tag">SARIF for <b>CI</b></span>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Static, not dynamic</p>
+    <h2>The sibling of Ethical Hacking</h2>
+    <p class="sub">That course attacks a <em>running</em> app (sqlmap, Burp, hydra) and defers
+      code review, SAST, and dependency scanning to "the next course." This is that course — same
+      vulnerabilities, found by reading the source.</p>
+    <div class="pipe" role="img" aria-label="Pipeline: source to tokens to AST to rules and taint to findings">
+      <span class="node io">source .py</span><span class="arr">→</span>
+      <span class="node">tokenize</span><span class="arr">→</span>
+      <span class="node">AST</span><span class="arr">→</span>
+      <span class="node">pattern rules</span><span class="arr">+</span>
+      <span class="node">taint</span><span class="arr">→</span>
+      <span class="node io">findings · SARIF</span>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Two ways a scanner sees a bug</p>
+    <h2>Patterns you flag on sight · flows you must trace</h2>
+    <p class="sub">The whole reason the course has both a rules engine and a taint tracker.</p>
+    <div class="grid2">
+      <div class="card">
+        <h3>Pattern rules</h3>
+        <p>Dangerous <em>regardless of input</em> — flag on sight.<br>
+          <span class="mono">eval() · md5() · debug=True · hardcoded key</span></p>
+      </div>
+      <div class="card">
+        <h3>Taint tracking</h3>
+        <p>Dangerous <em>only if user data reaches it</em> — follow the flow, source → sink.<br>
+          <span class="mono">request.args → open() / execute() / requests.get()</span></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">The path · read in order</p>
+    <h2>Six sections, then a scanner you built</h2>
+    <div>
+      <div class="stage">
+        <span class="dot2"></span>
+        <div class="stage-head"><span class="ts">00:00</span><span class="stitle">Foundations</span><span class="stime">~1h 30m</span></div>
+        <ul class="mods">
+          <li><span class="n">01-1</span>SAST vs DAST vs SCA vs manual review</li>
+          <li><span class="n">01-3</span>Vulnerability classes you can see in source</li>
+          <li><span class="n">01-4</span><b>Data flow & taint</b> — sources and sinks</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot2"></span>
+        <div class="stage-head"><span class="ts">01:30</span><span class="stitle">Reading code for vulnerabilities</span><span class="stime">~2h 25m</span></div>
+        <ul class="mods">
+          <li><span class="n">02-2</span>Injection: SQL, command, eval</li>
+          <li><span class="n">02-4</span>Auth, secrets & crypto</li>
+          <li><span class="n">02-5</span>Path traversal, SSRF & deserialization</li>
+          <li><span class="n">02-6</span>Access control & IDOR — the one tools miss</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot2"></span>
+        <div class="stage-head"><span class="ts">03:55</span><span class="stitle">Static analysis with AST (build it)</span><span class="stime">~1h 45m</span></div>
+        <ul class="mods">
+          <li><span class="n">03-2</span>AST basics — parse & walk with NodeVisitor</li>
+          <li><span class="n">03-3</span>Writing detection rules</li>
+          <li><span class="n">03-4</span>Simple taint tracking</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot2"></span>
+        <div class="stage-head"><span class="ts">05:40</span><span class="stitle">Industry tools & dependencies</span><span class="stime">~1h 30m</span></div>
+        <ul class="mods">
+          <li><span class="n">04-1</span>bandit &nbsp;·&nbsp; <span class="n">04-2</span>semgrep & custom rules</li>
+          <li><span class="n">04-3</span>Dependency scanning (SCA)</li>
+          <li><span class="n">04-4</span>Triage & false positives</li>
+        </ul>
+      </div>
+      <div class="stage">
+        <span class="dot2"></span>
+        <div class="stage-head"><span class="ts">07:10</span><span class="stitle">LLM-assisted review & shipping</span><span class="stime">~45m</span></div>
+        <ul class="mods">
+          <li><span class="n">05-1</span>LLM triage — help vs. hallucinate</li>
+          <li><span class="n">05-2</span>CI integration & reporting (SARIF)</li>
+        </ul>
+      </div>
+      <div class="stage cap">
+        <span class="dot2"></span>
+        <div class="stage-head"><span class="ts">done</span><span class="stitle">Capstone — the codeaudit tool</span><span class="stime">runnable</span></div>
+        <ul class="mods">
+          <li><span class="n">99</span><b>~300 lines of pure stdlib</b> you understand end to end</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Same target, three tools</p>
+    <h2>No single tool is a superset</h2>
+    <p class="sub">Run on the bundled vulnerable app — real numbers from the verified environment.
+      This is why teams run several, and why building one teaches you to read them all.</p>
+    <div class="tbl-scroll">
+      <table>
+        <thead><tr><th>Tool</th><th>Found</th><th>Strength</th><th>Blind spot</th></tr></thead>
+        <tbody>
+          <tr><td>codeaudit (yours)</td><td class="num">14</td><td>taint: input → open/execute/http</td><td>small rule set; intraprocedural</td></tr>
+          <tr><td>bandit 1.9.4</td><td class="num">15</td><td>~70 rules; severity + confidence</td><td>weaker at cross-flow taint</td></tr>
+          <tr><td>pip-audit 2.10.1 (deps)</td><td class="num">35</td><td>live CVE DB; transitive deps</td><td>your code, not libraries</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <p class="eyebrow">Prove it in 60 seconds</p>
+    <h2>Quick start</h2>
+<pre class="code"><span class="c"># in 99_project_codeaudit/ — the auditor needs no third-party packages</span>
+python -m codeaudit.cli samples/vulnerable_app
+python -m codeaudit.cli samples/vulnerable_app --format <span class="k">sarif</span>      <span class="c"># for CI</span>
+python -m codeaudit.cli samples/vulnerable_app --deps samples/vulnerable_app/requirements.txt
+python -m pytest -q                                            <span class="c"># 16 passed</span></pre>
+    <div class="callout">
+      <div class="b" aria-hidden="true"></div>
+      <p><b>Ethics:</b> the bundled app is intentionally vulnerable — a practice target only.
+        Audit only code you own or are authorised to review, and disclose real third-party
+        findings responsibly.</p>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p><span class="mono">docs/learning/secure_code_audit/</span> — start at the README → 00 · Introduction.
+      Pairs with the Ethical Hacking course (attack it) and leads into the CI/CD course (gate it).</p>
+  </div>
+</footer>

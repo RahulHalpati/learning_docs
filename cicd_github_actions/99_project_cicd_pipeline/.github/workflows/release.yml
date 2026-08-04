@@ -1,0 +1,35 @@
+name: Release
+
+# Fires when you push a version tag (e.g. v1.2.0). Builds a release image and
+# creates a GitHub Release with auto-generated notes.
+on:
+  push:
+    tags: ["v*"]
+
+permissions:
+  contents: write        # needed to create the GitHub Release
+  packages: write
+
+env:
+  IMAGE: ghcr.io/${{ github.repository }}
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      # tag the image with the release version (strip the leading "v")
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ env.IMAGE }}:${{ github.ref_name }}
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          generate_release_notes: true      # auto-changelog from merged PRs

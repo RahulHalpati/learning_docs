@@ -1,0 +1,7 @@
+# Pinned to the versions this course was verified against (2026-07-21).
+langgraph==1.2.9
+langchain-core==1.5.0
+# Optional — only needed for LANGGRAPH_LLM=ollama (real local generation):
+# langchain-ollama==1.1.0
+# Dev/test:
+pytest>=8.0

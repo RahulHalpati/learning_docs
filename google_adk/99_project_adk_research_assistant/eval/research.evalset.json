@@ -1,0 +1,19 @@
+{
+  "eval_set_id": "research_cases",
+  "name": "research_assistant_cases",
+  "eval_cases": [
+    {
+      "eval_id": "langgraph_report",
+      "conversation": [
+        {
+          "user_content": { "parts": [{ "text": "Research: LangGraph" }], "role": "user" },
+          "final_response": {
+            "parts": [{ "text": "Report: stateful agents, grounded in the research." }],
+            "role": "model"
+          },
+          "intermediate_data": { "tool_uses": [] }
+        }
+      ]
+    }
+  ]
+}

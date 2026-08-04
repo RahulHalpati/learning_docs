@@ -1,0 +1,62 @@
+name: CI
+
+# Run on every push and PR. Cancel superseded runs on the same ref to save minutes.
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege: this workflow only needs to read the repo.
+permissions:
+  contents: read
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      - run: ruff check app tests
+      - run: ruff format --check app tests
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: pip
+      - run: pip install -r requirements-dev.txt && pip install -e .
+      - run: coverage run -m pytest
+      - run: coverage report --fail-under=80
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - run: pip install -r requirements-dev.txt
+      # SAST — informational (upload for review). See the Secure Code Audit course.
+      - run: bandit -r app -f sarif -o bandit.sarif || true
+      - uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: bandit.sarif
+      # SCA — a known-vulnerable dependency FAILS the build (hard gate).
+      # Audit the locked runtime deps (what we ship), not the CI toolchain.
+      - run: pip-audit -r requirements.txt
