@@ -1,0 +1,17 @@
+# Quality gate: evals run on every PR. A drop below threshold blocks the merge.
+name: evals
+on: [push, pull_request]
+
+jobs:
+  eval:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.10" }
+      - run: pip install -r requirements.txt
+      - name: Run eval gates
+        run: pytest -q                      # fails the build if quality regressed
+      - name: Publish scorecard
+        if: always()
+        run: python -m evalkit.report >> $GITHUB_STEP_SUMMARY

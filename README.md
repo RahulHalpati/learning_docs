@@ -23,12 +23,14 @@ flowchart TD
     FUND --> API[⚡ FastAPI · async · WebSockets]
     API --> BE[🏭 Production FastAPI Backend]
     API --> RAG[🔎 LangChain & RAG]
+    RAG --> EV[📊 LLM Evals & Observability]
     RAG --> LG[🕸️ LangGraph agents]
     RAG --> ADK[🧩 Google ADK agents]
     LG -.-> ADK
     LG --> BOT[📈 LangGraph F&O trading bot]
     LG --> PA[✍️ LangGraph Proposal Agent]
     LG --> FYT[🎬 Faceless YouTube Studio]
+    LG -.evaluate.-> EV
     PY --> DOK[🐳 Docker]
     DOK --> K8S[☸️ Kubernetes]
     DOK --> CICD[🚦 CI/CD with GitHub Actions]
@@ -46,7 +48,7 @@ flowchart TD
     classDef data fill:#ffe,stroke:#aa8
     classDef sec fill:#fef,stroke:#a8a
     class PY,SDK,FL,FUND,API,BE core
-    class RAG,LG,ADK,BOT,PA,FYT ai
+    class RAG,LG,ADK,EV,BOT,PA,FYT ai
     class DOK,K8S,CICD,TOFU,LS infra
     class NET,DATA data
     class EH,CA,FU sec
@@ -70,6 +72,7 @@ flowchart TD
 | Guide | Level | Size | What you'll build | Verified |
 |-------|-------|------|-------------------|:--------:|
 | **[LangChain & RAG](langchain_rag/)** | Beginner | 4 sections + project | A "chat with your documents" assistant — embeddings, vector store, retrieval, grounded answers (runs offline, no API key) | ✅ |
+| **[LLM Evals & Observability](llm_evals_observability/)** | Intermediate → Advanced | 8 sections + capstone | **EvalKit**: prove your AI works — golden datasets, deterministic + RAG metrics, LLM-as-judge (with bias control and human-agreement validation), tracing with token/cost/latency, guardrails (PII/injection/grounding), and a **CI gate that blocks merges on regression**. Runs fully offline, stdlib-only; 22 tests | ✅ |
 | **[LangGraph](langgraph/)** | Beginner → Intermediate | 10 sections + capstone | Stateful LLM agents with graphs — state/nodes/edges, `Send` map-reduce, subgraphs, multi-agent handoffs, time-travel, the functional API, and the LangGraph Platform; culminating in an offline research-assistant capstone. Runs offline (fake/Ollama), version-pinned & verified | ✅ |
 | **[Google ADK (Agent Development Kit)](google_adk/)** | Beginner → Intermediate | 8 sections + capstone | Multi-agent systems with Google's ADK — LlmAgent, Sequential/Parallel/Loop workflows, tools (function/OpenAPI/MCP), sessions/memory, evaluation, deployment & A2A; runs fully offline via LiteLLM→Ollama (no Gemini/Vertex key), version-pinned & verified | ✅ |
 | **[LangGraph F&O Trading Bot](langgraph_fo_trading_bot/)** | Beginner | 9 lessons | An algorithmic Futures & Options (F&O) trading bot: market data → strategy → risk → orders → backtest | — |
@@ -139,6 +142,7 @@ Every guide follows the same conventions, so once you've done one you know how t
 ├── fastapi_fundamentals/         # 🌱 FastAPI from scratch: routes, params, Pydantic, CRUD
 ├── fastapi_async_websockets/     # ⚡ Async, WebSockets, streaming AI chat
 ├── fastapi_production_backend/   # 🏭 TaskFlow: layered API, SQLAlchemy+Alembic, JWT, tests, Docker
+├── llm_evals_observability/      # 📊 Evals, LLM-as-judge, tracing, cost, guardrails, CI gates
 ├── langchain_rag/                # 🔎 LangChain + RAG document assistant
 ├── langgraph/                    # 🕸️ Stateful LLM agents with graphs (offline, verified)
 ├── google_adk/                   # 🧩 Google Agent Development Kit — agents, tools, A2A (offline via Ollama)

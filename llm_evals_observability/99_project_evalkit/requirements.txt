@@ -1,0 +1,9 @@
+# Pinned to the versions this course was verified against (2026-08-05, Python 3.10).
+# The core harness is deliberately dependency-free — it's stdlib only.
+pytest>=8.0
+
+# Real-world tools the course points at (optional; not needed to run EvalKit):
+# ragas>=0.2          # RAG metrics (faithfulness, context precision/recall)
+# deepeval>=2.0       # pytest-style LLM unit tests
+# langfuse>=2.0       # tracing / observability backend
+# promptfoo           # prompt regression testing (npm)

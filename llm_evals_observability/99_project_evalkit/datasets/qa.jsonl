@@ -1,0 +1,6 @@
+{"id": "q1", "question": "What is Flask?", "reference": "Flask is a Python micro-framework", "relevant_docs": ["d1"], "tags": ["basics"]}
+{"id": "q2", "question": "What handles database migrations in Flask?", "reference": "Flask-Migrate wraps Alembic for Flask", "relevant_docs": ["d3"], "tags": ["data"]}
+{"id": "q3", "question": "Which server should I use in production?", "reference": "Gunicorn is a production WSGI server", "relevant_docs": ["d4"], "tags": ["deploy"]}
+{"id": "q4", "question": "What is Redis used for?", "reference": "Redis is an in-memory store used for caching, rate limiting and pub/sub", "relevant_docs": ["d5"], "tags": ["infra"]}
+{"id": "q5", "question": "What is FastAPI built on?", "reference": "FastAPI is an async Python framework built on Starlette and Pydantic", "relevant_docs": ["d2"], "tags": ["basics"]}
+{"id": "q6", "question": "Who won the 1998 world cup?", "reference": "I don't know.", "relevant_docs": [], "tags": ["out-of-scope"]}
