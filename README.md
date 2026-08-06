@@ -18,7 +18,9 @@ Already comfortable with Python? Jump straight to whatever you need below.
 flowchart TD
     PY[🐍 Python — from scratch to FastAPI]
     PY --> SDK[📦 Build a Python SDK]
-    PY --> API[⚡ FastAPI · async · WebSockets]
+    PY --> FL[🧪 Flask — first route to production]
+    PY --> FUND[🌱 FastAPI Fundamentals]
+    FUND --> API[⚡ FastAPI · async · WebSockets]
     API --> BE[🏭 Production FastAPI Backend]
     API --> RAG[🔎 LangChain & RAG]
     RAG --> LG[🕸️ LangGraph agents]
@@ -43,7 +45,7 @@ flowchart TD
     classDef infra fill:#fee,stroke:#a88
     classDef data fill:#ffe,stroke:#aa8
     classDef sec fill:#fef,stroke:#a8a
-    class PY,SDK,API,BE core
+    class PY,SDK,FL,FUND,API,BE core
     class RAG,LG,ADK,BOT,PA,FYT ai
     class DOK,K8S,CICD,TOFU,LS infra
     class NET,DATA data
@@ -58,8 +60,10 @@ flowchart TD
 |-------|-------|------|-------------------|:--------:|
 | **[Python — From Scratch to FastAPI](python_complete/)** | Beginner | 9 sections + capstone | Core Python from "what is a variable" to a tested async web API, with a deep dive on exceptions & errors | ✅ |
 | **[Building a Python SDK](python_sdk/)** | Intermediate | 9 sections + capstone | A real, installable, typed API client library (`pokesdk`) — sync + async, retries, pagination, tests, published to PyPI with CI | ✅ |
+| **[FastAPI Fundamentals](fastapi_fundamentals/)** | Beginner | 14 lessons | FastAPI from scratch — routes, path/query/header params, Pydantic bodies (nested), response models & status codes, CRUD, HTTP methods & idempotency, **form data + file/image uploads**, `def` vs `async def`, dependencies, `APIRouter`, **endpoint testing** with pytest, **OpenAPI docs**, cookies/CORS/background tasks. The 0→1 starting point for the two FastAPI courses below | ✅ |
 | **[FastAPI · Async · WebSockets](fastapi_async_websockets/)** | Beginner → Intermediate | 7 sections + 2 projects | A real-time AI chatbot that streams an LLM's answer token-by-token over a WebSocket — then **scaled** with Redis (caching, rate limiting, cross-worker pub/sub, background jobs) and provisioned with OpenTofu | ✅ |
 | **[Production FastAPI Backend](fastapi_production_backend/)** | Intermediate | 9 sections + capstone | **TaskFlow**, a real task/project API: layered architecture, async SQLAlchemy 2.0 + Alembic, JWT/OAuth2 auth + roles, pagination, error handling, full pytest suite, Redis caching/rate-limit, arq jobs, logging/metrics/health, and a Docker Compose stack. Runs offline (SQLite); Postgres/Redis via Docker | ✅ |
+| **[Flask — from first route to production](flask_complete/)** | Beginner → Intermediate | 9 sections + capstone | **FlaskNotes**: one Flask app with two faces — a Jinja2 web UI *and* a JWT JSON API. App factory, blueprints, Flask-SQLAlchemy + Flask-Migrate, session auth (Flask-Login) + JWT, validated image uploads, central error handling (HTML *or* JSON), logging, 20 pytest tests, gunicorn + Docker | ✅ |
 
 ## 🤖 AI / LLM
 
@@ -131,6 +135,8 @@ Every guide follows the same conventions, so once you've done one you know how t
 .
 ├── python_complete/              # 🐍 Python from scratch → FastAPI (+ capstone)
 ├── python_sdk/                   # 📦 Build & publish a typed API client library
+├── flask_complete/               # 🧪 Flask: web UI + JSON API, factory/blueprints, SQLAlchemy, auth, Docker
+├── fastapi_fundamentals/         # 🌱 FastAPI from scratch: routes, params, Pydantic, CRUD
 ├── fastapi_async_websockets/     # ⚡ Async, WebSockets, streaming AI chat
 ├── fastapi_production_backend/   # 🏭 TaskFlow: layered API, SQLAlchemy+Alembic, JWT, tests, Docker
 ├── langchain_rag/                # 🔎 LangChain + RAG document assistant

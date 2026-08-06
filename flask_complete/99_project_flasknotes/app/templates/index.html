@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Your notes</h1>
+  {% if not current_user.is_authenticated %}
+    <p>Please <a href="{{ url_for('auth.login') }}">log in</a> to see your notes.</p>
+  {% elif notes %}
+    <ul>
+    {% for note in notes %}
+      <li>
+        <strong>{{ note.title }}</strong>
+        {% if note.image %}
+          <img src="{{ url_for('web.uploaded_file', filename=note.image) }}" alt="" width="80">
+        {% endif %}
+        <p>{{ note.body }}</p>
+      </li>
+    {% endfor %}
+    </ul>
+  {% else %}
+    <p>No notes yet. <a href="{{ url_for('web.new_note') }}">Write one</a>.</p>
+  {% endif %}
+{% endblock %}
