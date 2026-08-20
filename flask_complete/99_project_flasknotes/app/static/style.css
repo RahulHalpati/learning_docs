@@ -1,6 +1,0 @@
-body { font: 16px/1.5 system-ui, sans-serif; max-width: 42rem; margin: 2rem auto; padding: 0 1rem; }
-nav { display: flex; gap: 1rem; align-items: center; border-bottom: 1px solid #ddd; padding-bottom: .5rem; }
-nav form { display: inline; }
-.flashes { list-style: none; padding: 0; }
-.flashes .error { color: #b00; } .flashes .warning { color: #a60; }
-label { display: block; margin: .5rem 0; }

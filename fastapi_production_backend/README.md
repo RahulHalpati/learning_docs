@@ -8,7 +8,7 @@ This course is the counterpart to the **[FastAPI · Async · WebSockets](../fast
 
 ## Who this is for
 
-You know Python and the basics of FastAPI (routes, Pydantic, `async def`) — or you've done **[FastAPI Fundamentals](../fastapi_fundamentals/)** (the 0→1 starting point) or the [async/WebSockets course](../fastapi_async_websockets/). You want to learn how professionals **structure** a FastAPI project and wire in the integrations a production service needs. No prior database, auth, or DevOps background required — all built from scratch.
+You know Python and the basics of FastAPI (routes, Pydantic, `async def`) — or you've done **[FastAPI — from first route to production](../fastapi_complete/)** (the 0→1 starting point) or the [async/WebSockets course](../fastapi_async_websockets/). You want to learn how professionals **structure** a FastAPI project and wire in the integrations a production service needs. No prior database, auth, or DevOps background required — all built from scratch.
 
 ## What you'll be able to do
 

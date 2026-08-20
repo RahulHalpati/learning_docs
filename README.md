@@ -12,25 +12,31 @@ New to all of this? Follow the natural progression:
 
 **[Python](python_complete/) → [FastAPI](fastapi_async_websockets/) → [LangChain & RAG](langchain_rag/) → [LangGraph](langgraph/)**
 
+📊 **Track your progress** across every course in the **[Learning Tracker](LEARNING_TRACKER.md)** — a checkable to-do with a recommended job-ready path.
+
 Already comfortable with Python? Jump straight to whatever you need below.
 
 ```mermaid
 flowchart TD
     PY[🐍 Python — from scratch to FastAPI]
     PY --> SDK[📦 Build a Python SDK]
-    PY --> FL[🧪 Flask — first route to production]
-    PY --> FUND[🌱 FastAPI Fundamentals]
-    FUND --> API[⚡ FastAPI · async · WebSockets]
+    PY --> FC[⚡ FastAPI — first route to production]
+    FC --> API[⚡ FastAPI · async · WebSockets]
     API --> BE[🏭 Production FastAPI Backend]
     API --> RAG[🔎 LangChain & RAG]
     RAG --> EV[📊 LLM Evals & Observability]
     RAG --> LG[🕸️ LangGraph agents]
     RAG --> ADK[🧩 Google ADK agents]
     LG -.-> ADK
+    BE --> MCP[🔌 Build MCP Servers]
+    ADK -.consumes.-> MCP
+    LG -.consumes.-> MCP
     LG --> BOT[📈 LangGraph F&O trading bot]
     LG --> PA[✍️ LangGraph Proposal Agent]
     LG --> FYT[🎬 Faceless YouTube Studio]
     LG -.evaluate.-> EV
+    PY --> FF[🎞️ ffmpeg & Media Processing]
+    FF -.media engine.-> FYT
     PY --> DOK[🐳 Docker]
     DOK --> K8S[☸️ Kubernetes]
     DOK --> CICD[🚦 CI/CD with GitHub Actions]
@@ -47,8 +53,8 @@ flowchart TD
     classDef infra fill:#fee,stroke:#a88
     classDef data fill:#ffe,stroke:#aa8
     classDef sec fill:#fef,stroke:#a8a
-    class PY,SDK,FL,FUND,API,BE core
-    class RAG,LG,ADK,EV,BOT,PA,FYT ai
+    class PY,SDK,FC,API,BE,FF core
+    class RAG,LG,ADK,EV,BOT,PA,FYT,MCP ai
     class DOK,K8S,CICD,TOFU,LS infra
     class NET,DATA data
     class EH,CA,FU sec
@@ -62,10 +68,9 @@ flowchart TD
 |-------|-------|------|-------------------|:--------:|
 | **[Python — From Scratch to FastAPI](python_complete/)** | Beginner | 9 sections + capstone | Core Python from "what is a variable" to a tested async web API, with a deep dive on exceptions & errors | ✅ |
 | **[Building a Python SDK](python_sdk/)** | Intermediate | 9 sections + capstone | A real, installable, typed API client library (`pokesdk`) — sync + async, retries, pagination, tests, published to PyPI with CI | ✅ |
-| **[FastAPI Fundamentals](fastapi_fundamentals/)** | Beginner | 14 lessons | FastAPI from scratch — routes, path/query/header params, Pydantic bodies (nested), response models & status codes, CRUD, HTTP methods & idempotency, **form data + file/image uploads**, `def` vs `async def`, dependencies, `APIRouter`, **endpoint testing** with pytest, **OpenAPI docs**, cookies/CORS/background tasks. The 0→1 starting point for the two FastAPI courses below | ✅ |
+| **[FastAPI — from first route to production](fastapi_complete/)** | Beginner → Job-ready | 11 sections + capstone | **linkbox**, one app grown from first route to shipped service: Pydantic v2, forms + validated image uploads + PDF/DOCX parsing, DI + app factory, async SQLAlchemy 2.0 + Alembic on Postgres, clean architecture (routers→services→repositories), JWT/OAuth2 + refresh rotation + RBAC, Redis caching/rate-limiting/sessions, Arq jobs, pytest with transaction-rollback fixtures, structlog + RFC 9457 errors, Docker Compose + GitHub Actions. Every section gated by a test task; ends with the **DevBoard** capstone spec you build solo | — |
 | **[FastAPI · Async · WebSockets](fastapi_async_websockets/)** | Beginner → Intermediate | 7 sections + 2 projects | A real-time AI chatbot that streams an LLM's answer token-by-token over a WebSocket — then **scaled** with Redis (caching, rate limiting, cross-worker pub/sub, background jobs) and provisioned with OpenTofu | ✅ |
 | **[Production FastAPI Backend](fastapi_production_backend/)** | Intermediate | 9 sections + capstone | **TaskFlow**, a real task/project API: layered architecture, async SQLAlchemy 2.0 + Alembic, JWT/OAuth2 auth + roles, pagination, error handling, full pytest suite, Redis caching/rate-limit, arq jobs, logging/metrics/health, and a Docker Compose stack. Runs offline (SQLite); Postgres/Redis via Docker | ✅ |
-| **[Flask — from first route to production](flask_complete/)** | Beginner → Intermediate | 9 sections + capstone | **FlaskNotes**: one Flask app with two faces — a Jinja2 web UI *and* a JWT JSON API. App factory, blueprints, Flask-SQLAlchemy + Flask-Migrate, session auth (Flask-Login) + JWT, validated image uploads, central error handling (HTML *or* JSON), logging, 20 pytest tests, gunicorn + Docker | ✅ |
 
 ## 🤖 AI / LLM
 
@@ -75,9 +80,11 @@ flowchart TD
 | **[LLM Evals & Observability](llm_evals_observability/)** | Intermediate → Advanced | 8 sections + capstone | **EvalKit**: prove your AI works — golden datasets, deterministic + RAG metrics, LLM-as-judge (with bias control and human-agreement validation), tracing with token/cost/latency, guardrails (PII/injection/grounding), and a **CI gate that blocks merges on regression**. Runs fully offline, stdlib-only; 22 tests | ✅ |
 | **[LangGraph](langgraph/)** | Beginner → Intermediate | 10 sections + capstone | Stateful LLM agents with graphs — state/nodes/edges, `Send` map-reduce, subgraphs, multi-agent handoffs, time-travel, the functional API, and the LangGraph Platform; culminating in an offline research-assistant capstone. Runs offline (fake/Ollama), version-pinned & verified | ✅ |
 | **[Google ADK (Agent Development Kit)](google_adk/)** | Beginner → Intermediate | 8 sections + capstone | Multi-agent systems with Google's ADK — LlmAgent, Sequential/Parallel/Loop workflows, tools (function/OpenAPI/MCP), sessions/memory, evaluation, deployment & A2A; runs fully offline via LiteLLM→Ollama (no Gemini/Vertex key), version-pinned & verified | ✅ |
+| **[Build MCP Servers](mcp_servers/)** | Beginner → Job-ready | 7 sections + capstone | **notevault**: build the integration layer between models and real systems. Author MCP servers with **FastMCP** — tools/resources/prompts, async DB backends, the **2026-07-28 stateless streamable-HTTP** transport, **OAuth 2.1** resource-server auth, defense-in-depth against prompt injection/SSRF/destructive-tool abuse (HITL gates), in-memory tests, Docker, and a live agent consuming it. The build-side complement to ADK's consume-side MCP | — |
 | **[LangGraph F&O Trading Bot](langgraph_fo_trading_bot/)** | Beginner | 9 lessons | An algorithmic Futures & Options (F&O) trading bot: market data → strategy → risk → orders → backtest | — |
 | **[LangGraph Proposal Agent](langgraph_proposal_agent/)** | Beginner | 5 sections + capstone | A 4-agent state machine that turns any job posting into a personalised proposal — CLI + FastAPI + Streamlit, runs offline | ✅ |
 | **[Faceless YouTube Studio](faceless_youtube_agent/)** | Beginner | 5 sections + capstone | A 6-node LangGraph pipeline that turns a topic into a finished video (research → script → voiceover → slides → mp4 → SEO) with a human review gate — opens with a LangGraph vs Google ADK comparison; runs offline, produces a real .mp4 | ✅ |
+| **[ffmpeg & Media Processing](ffmpeg_media_processing/)** | Beginner → Intermediate | 6 sections + capstone | **mediakit**: the media engine under every video product. Containers/codecs, ffprobe, frame-accurate cutting, filtergraphs, 9:16 reframing, SRT generation + burned-in captions, CRF/preset tuning with measured numbers, and driving it all from Python. Capstone turns a long video into a captioned vertical clip in one command; free local transcription via faster-whisper. 23 tests on real media | ✅ |
 
 ## 🔐 Security
 
@@ -138,17 +145,18 @@ Every guide follows the same conventions, so once you've done one you know how t
 .
 ├── python_complete/              # 🐍 Python from scratch → FastAPI (+ capstone)
 ├── python_sdk/                   # 📦 Build & publish a typed API client library
-├── flask_complete/               # 🧪 Flask: web UI + JSON API, factory/blueprints, SQLAlchemy, auth, Docker
-├── fastapi_fundamentals/         # 🌱 FastAPI from scratch: routes, params, Pydantic, CRUD
+├── fastapi_complete/             # ⚡ FastAPI 0→job-ready: Pydantic v2, SQLAlchemy+Alembic, JWT/RBAC, Redis, tests, Docker+CI
 ├── fastapi_async_websockets/     # ⚡ Async, WebSockets, streaming AI chat
 ├── fastapi_production_backend/   # 🏭 TaskFlow: layered API, SQLAlchemy+Alembic, JWT, tests, Docker
 ├── llm_evals_observability/      # 📊 Evals, LLM-as-judge, tracing, cost, guardrails, CI gates
 ├── langchain_rag/                # 🔎 LangChain + RAG document assistant
 ├── langgraph/                    # 🕸️ Stateful LLM agents with graphs (offline, verified)
 ├── google_adk/                   # 🧩 Google Agent Development Kit — agents, tools, A2A (offline via Ollama)
+├── mcp_servers/                  # 🔌 Build MCP servers: FastMCP, stateless HTTP, OAuth 2.1, security → notevault
 ├── langgraph_fo_trading_bot/     # 📈 LangGraph F&O trading bot
 ├── langgraph_proposal_agent/     # ✍️ Multi-agent proposal generator (4 agents, revision loop, 3 frontends)
 ├── faceless_youtube_agent/       # 🎬 LangGraph video pipeline: topic → script → voice → slides → mp4 → SEO
+├── ffmpeg_media_processing/      # 🎞️ ffmpeg: codecs, cutting, filters, captions, encoding → mediakit toolkit
 ├── ethical_hacking/              # 🔐 Networking → Linux → tools → web attacks → Docker pentest lab
 ├── secure_code_audit/            # 🔎 Read source for vulns → build a SAST tool → bandit/semgrep/SCA → CI
 ├── face_unlock_linux/            # 🙂 Face auth from scratch (OpenCV + LBPH) → PAM/sudo safely → Howdy

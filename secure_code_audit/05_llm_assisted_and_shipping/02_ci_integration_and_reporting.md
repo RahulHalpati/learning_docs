@@ -142,7 +142,5 @@ SARIF upload still records everything for review.
 
 </details>
 
-**Course complete.** → Put it all together in the
-**[99 · Capstone: the `codeaudit` tool](../99_project_codeaudit/README.md)**, then
-continue to the **[CI/CD course](../../)** to build the pipeline this section
-sketched.
+**→ Next: [05-3 · AI pentesting in CI with Strix](03_ai_pentest_in_ci_strix.md)** — add a
+*dynamic* AI pentester alongside these static gates.
