@@ -1,0 +1,21 @@
+name: Security Scan
+
+on:
+  pull_request:
+
+jobs:
+  strix-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install Strix
+        run: curl -sSL https://strix.ai/install | bash
+
+      - name: Run Security Scan
+        env:
+          STRIX_LLM: ${{ secrets.STRIX_LLM }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: strix -n -t ./secure_code_audit/secure_code_audit/99_project_codeaudit --scan-mode quick
