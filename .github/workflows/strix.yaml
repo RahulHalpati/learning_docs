@@ -11,7 +11,7 @@ jobs:
             
             - name: practice test
               run: |
-                cd 99_project_codeaudit
+                cd secure_code_audit/99_project_codeaudit
                 python -m codeaudit.cli . --format sarif > codeaudit.sarif || true
             - uses: github/codeql-action/upload-sarif@v3
               with: {sarif_file: cicd_testing/end.sarif}
@@ -19,7 +19,7 @@ jobs:
             - name: pip-audit
               run: |
                 pip install pip-audit
-                pip-audit -r 99_project_codeaudit/samples/vulnerable_app/requirements.txt
+                pip-audit -r secure_code_audit/99_project_codeaudit/samples/vulnerable_app/requirements.txt
             - name: Test
               run: |
                 cd 99_project_codeaudit && pip install -r requirements.txt && python -m pytest -q
