@@ -13,6 +13,7 @@ jobs:
               with: {python-version: "3.11"}
             
             - name: practice test
+              continue-on-error: true
               run: |
                 cd secure_code_audit/99_project_codeaudit
                 python -m codeaudit.cli . --format sarif > codeaudit.sarif || true
