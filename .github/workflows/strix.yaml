@@ -14,7 +14,7 @@ jobs:
                 cd secure_code_audit/99_project_codeaudit
                 python -m codeaudit.cli . --format sarif > codeaudit.sarif || true
             - uses: github/codeql-action/upload-sarif@v4
-              with: {sarif_file: cicd_testing/end.sarif}
+              with: {sarif_file: secure_code_audit/99_project_codeaudit/end.sarif}
 
             - name: pip-audit
               run: |
