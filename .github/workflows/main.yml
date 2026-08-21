@@ -1,6 +1,7 @@
 name: Security Scan
 
 on:
+  push:
   pull_request:
 
 jobs:
@@ -18,4 +19,4 @@ jobs:
         env:
           STRIX_LLM: ${{ secrets.STRIX_LLM }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-        run: strix -n -t ./secure_code_audit/secure_code_audit/99_project_codeaudit --scan-mode quick
+        run: strix -n -t ./secure_code_audit/99_project_codeaudit --scan-mode quick
