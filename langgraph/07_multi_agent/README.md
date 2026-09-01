@@ -2,7 +2,7 @@
 
 > **Prerequisites:** [04-2 · Command](../04_control_flow/02_command.md) · [04-3 · Send](../04_control_flow/03_send_map_reduce.md) · [04-4 · Subgraphs](../04_control_flow/04_subgraphs.md) · **Time:** ~2 h
 
-One agent with fifteen tools becomes an unfocused mess. The fix is **multiple specialized agents** that collaborate. This section builds the four canonical topologies with real, offline-verified code: **supervisor** (a router delegates), **swarm** (peers hand off), **hierarchical** (teams of teams), and **map-reduce** (parallel agents over a list).
+One agent with fifteen tools becomes an unfocused mess. The fix is **multiple specialized agents** that collaborate. This section builds the four canonical topologies with runnable, verified code: **supervisor** (a router delegates), **swarm** (peers hand off), **hierarchical** (teams of teams), and **map-reduce** (parallel agents over a list).
 
 ## Modules
 

@@ -14,6 +14,12 @@ New to all of this? Follow the natural progression:
 
 📊 **Track your progress** across every course in the **[Learning Tracker](LEARNING_TRACKER.md)** — a checkable to-do with a recommended job-ready path.
 
+🎯 **Interviewing?** [132 interview questions](INTERVIEW_QUESTIONS.md) with key points — scenario-based, calibrated for a GenAI/backend role.
+
+⚡ **Quick reference:** [CHEATSHEET.md](CHEATSHEET.md) — FastAPI · Flask · LangChain RAG · Redis · AWS · OpenTofu, in code snippets.
+
+📦 **Tooling:** [uv in one hour](UV_GUIDE.md) — the modern replacement for pip/venv/pyenv. Optional; it's a speed win, not a résumé line.
+
 Already comfortable with Python? Jump straight to whatever you need below.
 
 ```mermaid
@@ -42,11 +48,13 @@ flowchart TD
     DOK --> CICD[🚦 CI/CD with GitHub Actions]
     CA --> CICD
     CICD --> TOFU[🏗️ OpenTofu / IaC]
-    TOFU --> LS[☁️ AWS on LocalStack]
+    TOFU --> LS[☁️ AWS locally on Floci]
     PY --> EH[🔐 Ethical Hacking & Pentesting]
     EH --> CA[🔎 Secure Code Audit]
     EH --> FU[🙂 Face Unlock on Linux]
     NET[🌐 Network inventory] --> DATA[🗄️ Inventory data engineering]
+    DATA --> SNOW[❄️ Snowflake data platform]
+    PY --> SNOW
 
     classDef ai fill:#eef,stroke:#88a
     classDef core fill:#efe,stroke:#8a8
@@ -56,7 +64,7 @@ flowchart TD
     class PY,SDK,FC,API,BE,FF core
     class RAG,LG,ADK,EV,BOT,PA,FYT,MCP ai
     class DOK,K8S,CICD,TOFU,LS infra
-    class NET,DATA data
+    class NET,DATA,SNOW data
     class EH,CA,FU sec
 ```
 
@@ -76,12 +84,12 @@ flowchart TD
 
 | Guide | Level | Size | What you'll build | Verified |
 |-------|-------|------|-------------------|:--------:|
-| **[LangChain & RAG](langchain_rag/)** | Beginner | 4 sections + project | A "chat with your documents" assistant — embeddings, vector store, retrieval, grounded answers (runs offline, no API key) | ✅ |
+| **[LangChain & RAG](langchain_rag/)** | Beginner | 5 sections + project | A "chat with your documents" assistant — embeddings, vector stores (**pgvector**, **Qdrant**, FAISS/Chroma + a production decision guide and HNSW/IVF indexing), hybrid retrieval + reranking, conversational RAG, evaluation, **GraphRAG over a knowledge graph (Neo4j)**, tool calling & agentic RAG (core path runs offline, no API key) | ✅ |
 | **[LLM Evals & Observability](llm_evals_observability/)** | Intermediate → Advanced | 8 sections + capstone | **EvalKit**: prove your AI works — golden datasets, deterministic + RAG metrics, LLM-as-judge (with bias control and human-agreement validation), tracing with token/cost/latency, guardrails (PII/injection/grounding), and a **CI gate that blocks merges on regression**. Runs fully offline, stdlib-only; 22 tests | ✅ |
-| **[LangGraph](langgraph/)** | Beginner → Intermediate | 10 sections + capstone | Stateful LLM agents with graphs — state/nodes/edges, `Send` map-reduce, subgraphs, multi-agent handoffs, time-travel, the functional API, and the LangGraph Platform; culminating in an offline research-assistant capstone. Runs offline (fake/Ollama), version-pinned & verified | ✅ |
+| **[LangGraph](langgraph/)** | Beginner → Intermediate | 10 sections + capstone | Stateful LLM agents with graphs — state/nodes/edges, `Send` map-reduce, subgraphs, multi-agent handoffs, time-travel, the functional API, **MCP tool integration**, and the LangGraph Platform; culminating in an offline research-assistant capstone. Runs offline (fake/Ollama), version-pinned & verified | ✅ |
 | **[Google ADK (Agent Development Kit)](google_adk/)** | Beginner → Intermediate | 8 sections + capstone | Multi-agent systems with Google's ADK — LlmAgent, Sequential/Parallel/Loop workflows, tools (function/OpenAPI/MCP), sessions/memory, evaluation, deployment & A2A; runs fully offline via LiteLLM→Ollama (no Gemini/Vertex key), version-pinned & verified | ✅ |
 | **[Build MCP Servers](mcp_servers/)** | Beginner → Job-ready | 7 sections + capstone | **notevault**: build the integration layer between models and real systems. Author MCP servers with **FastMCP** — tools/resources/prompts, async DB backends, the **2026-07-28 stateless streamable-HTTP** transport, **OAuth 2.1** resource-server auth, defense-in-depth against prompt injection/SSRF/destructive-tool abuse (HITL gates), in-memory tests, Docker, and a live agent consuming it. The build-side complement to ADK's consume-side MCP | — |
-| **[LangGraph F&O Trading Bot](langgraph_fo_trading_bot/)** | Beginner | 9 lessons | An algorithmic Futures & Options (F&O) trading bot: market data → strategy → risk → orders → backtest | — |
+| **LangGraph F&O Trading Bot** *(planned — not yet in the repo)* | Beginner | 9 lessons | An algorithmic Futures & Options (F&O) trading bot: market data → strategy → risk → orders → backtest | — |
 | **[LangGraph Proposal Agent](langgraph_proposal_agent/)** | Beginner | 5 sections + capstone | A 4-agent state machine that turns any job posting into a personalised proposal — CLI + FastAPI + Streamlit, runs offline | ✅ |
 | **[Faceless YouTube Studio](faceless_youtube_agent/)** | Beginner | 5 sections + capstone | A 6-node LangGraph pipeline that turns a topic into a finished video (research → script → voiceover → slides → mp4 → SEO) with a human review gate — opens with a LangGraph vs Google ADK comparison; runs offline, produces a real .mp4 | ✅ |
 | **[ffmpeg & Media Processing](ffmpeg_media_processing/)** | Beginner → Intermediate | 6 sections + capstone | **mediakit**: the media engine under every video product. Containers/codecs, ffprobe, frame-accurate cutting, filtergraphs, 9:16 reframing, SRT generation + burned-in captions, CRF/preset tuning with measured numbers, and driving it all from Python. Capstone turns a long video into a captioned vertical clip in one command; free local transcription via faster-whisper. 23 tests on real media | ✅ |
@@ -102,12 +110,13 @@ flowchart TD
 | **[Kubernetes](kubernetes/)** | Intermediate | 4 sections + capstone | Deploy an app to a real (local, kind) cluster: Deployments, Services, ConfigMaps, probes, scaling, rollouts, Helm, GitOps. Verified end to end | ✅ |
 | **[CI/CD with GitHub Actions](cicd_github_actions/)** | Beginner → Intermediate | 5 sections + capstone | A full pipeline for a real app: lint → test matrix → SAST/SCA → Docker build → GHCR → staging → approval → production, plus releases. Every stage runs locally via `make ci` | ✅ |
 | **[Infrastructure as Code with OpenTofu](opentofu_iac/)** | Beginner → Intermediate | 4 sections + capstone | Declarative infra with OpenTofu (the open Terraform fork): providers, HCL, state, modules, remote state, CI. Capstone provisions the CI/CD app's container via the Docker provider — runs locally, no cloud account | ✅ |
-| **[AWS Locally with LocalStack](aws_localstack/)** | Beginner → Intermediate | 5 sections + capstone | Learn AWS (S3, DynamoDB, SQS, Lambda, Secrets Manager, SSM, EventBridge, Step Functions, IAM) hands-on against LocalStack — an AWS emulator in a container. Provision with OpenTofu, exercise with boto3, test in CI. No cloud account, no bill | ✅ |
+| **[AWS Locally with Floci](aws_localstack/)** | Beginner → Intermediate | 8 sections + capstone | Learn AWS hands-on against Floci — a free AWS emulator in a container (the successor to LocalStack Community). **IAM/access first** (roles, trust + least-privilege policies per service), then S3, DynamoDB, SQS/SNS, Lambda, Secrets Manager, SSM, EventBridge, Step Functions, **KMS**, **CloudWatch/Logs**, **VPC/security groups/EC2**, and **Bedrock** (bridges to the LangChain/LangGraph courses). Provision with OpenTofu, exercise with boto3, test in CI. No cloud account needed except for the Bedrock module | ✅ |
 
 ## 🗄️ Data & Domain (Telecom / Inventory)
 
 | Guide | Level | Size | What you'll build | Verified |
 |-------|-------|------|-------------------|:--------:|
+| **[Snowflake — the cloud data platform](snowflake_data_platform/)** | Beginner → Intermediate | 6 sections + capstone | **linkstash analytics**: a real warehouse — architecture (storage/compute split), stages + `COPY INTO`, semi-structured `VARIANT`/`FLATTEN`, **Python connector + Snowpark**, **RBAC** with future grants, pruning/caching/**cost guardrails**, and an automated **Snowpipe → stream → task** pipeline with Time Travel & zero-copy clones. ⚠️ **Needs a real trial account** (30 d / $400 credits) — no emulator exists | — |
 | **[Network Inventory Management](network_inventory/)** | Beginner | 5 lessons | The fundamentals of network inventory, data models, and TMF standards (TMF 633/634/638/639) | — |
 | **[Inventory Data Engineering & Analytics](inventory_data_engineering/)** | Intermediate | 8 lessons | A full inventory data pipeline: relational modeling → APIs → ETL → graph databases → ML/analytics | — |
 
@@ -135,8 +144,8 @@ Every guide follows the same conventions, so once you've done one you know how t
 5. For guides with a runnable project, set up a fresh virtual environment:
 
    ```bash
-   python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
-   pip install -r requirements.txt                      # where provided
+   uv venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+   uv pip install -r requirements.txt                      # where provided
    ```
 
 ## 🗂️ Repository layout
@@ -164,7 +173,8 @@ Every guide follows the same conventions, so once you've done one you know how t
 ├── kubernetes/                   # ☸️ Deploy to a real (kind) cluster: Deployments, Services, probes, Helm, GitOps
 ├── cicd_github_actions/          # 🚦 Full GitHub Actions pipeline: lint→test→scan→build→deploy (+ local Makefile)
 ├── opentofu_iac/                 # 🏗️ Infrastructure as Code with OpenTofu → provisions the CI/CD app locally
-├── aws_localstack/               # ☁️ Learn AWS locally on LocalStack (S3/DynamoDB/SQS/Lambda) + OpenTofu + CI
+├── aws_localstack/               # ☁️ Learn AWS locally on Floci (S3/DynamoDB/SQS/Lambda) + OpenTofu + CI
+├── snowflake_data_platform/      # ❄️ Snowflake: warehouses, COPY/VARIANT, Snowpark, RBAC, cost, pipelines
 ├── network_inventory/            # 🌐 Network inventory, data models, TMF
 └── inventory_data_engineering/   # 🗄️ Relational → graph → ML data pipeline
 ```

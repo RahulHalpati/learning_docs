@@ -2,7 +2,7 @@
 
 > **Prerequisites:** Sections [03](../03_building_graphs/README.md)–[07](../07_multi_agent/README.md) · **Time:** ~90 min
 
-Three end-to-end graphs that combine everything so far — routing, tools, loops, HITL, memory — into shapes you'll actually ship. Each is offline-verified and deterministic so you can run it and get the same output shown here.
+Three end-to-end graphs that combine everything so far — routing, tools, loops, HITL, memory — into shapes you'll actually ship. Each was run end to end; 08-1 and 08-3 are deterministic, 08-2 calls the LLM so its wording varies while the graph behaviour doesn't.
 
 ## Modules
 

@@ -13,6 +13,7 @@ You have a working RAG system. This section makes it *good*: retrieval that comb
 | 02 | [Conversational RAG](02_conversational_rag.md) | How does my RAG bot handle follow-up questions? |
 | 03 | [Evaluating RAG](03_evaluating_rag.md) | How do I know if my answers are any good? |
 | 04 | [Serving & production](04_serving_and_production.md) | How do I turn this into an app, safely and affordably? |
+| 05 | [GraphRAG](05_graph_rag.md) | How do I answer multi-hop / relationship questions vector search can't?  ·  ⚪ *optional / appendix* |
 
 ## What you'll be able to do after this section
 

@@ -12,7 +12,7 @@ Before you deploy, you want your graph running as a *server* you can poke at —
 ## Install the CLI
 
 ```bash
-pip install "langgraph-cli[inmem]"     # [inmem] = local in-memory server, no Docker/Postgres
+uv pip install "langgraph-cli[inmem]"     # [inmem] = local in-memory server, no Docker/Postgres
 ```
 
 This is a separate package from the `langgraph` library you've used — it's the tooling that *runs* your graphs as a service.
@@ -76,7 +76,7 @@ It's the same primitives you've used in code (streaming, checkpoints, time-trave
 
 ## Recap & next
 
-- ✅ `pip install "langgraph-cli[inmem]"`, declare graphs in `langgraph.json`, run `langgraph dev`.
+- ✅ `uv pip install "langgraph-cli[inmem]"`, declare graphs in `langgraph.json`, run `langgraph dev`.
 - ✅ `graphs` maps names to `file.py:compiled_graph`; **don't** attach your own checkpointer for the Platform.
 - ✅ Studio visualizes the graph and gives UI-driven streaming, state inspection, time-travel, and thread management.
 - ✅ Self-check: why do you omit the checkpointer when compiling a graph for `langgraph dev`?
@@ -90,5 +90,5 @@ It's the same primitives you've used in code (streaming, checkpoints, time-trave
 <details>
 <summary>Solution</summary>
 
-Put the builder + `app = builder.compile()` (no checkpointer) in `app/graph.py`, add the `langgraph.json` above with `"chatbot": "./app/graph.py:app"`, `pip install "langgraph-cli[inmem]"`, and run `langgraph dev`. The printed URL opens Studio.
+Put the builder + `app = builder.compile()` (no checkpointer) in `app/graph.py`, add the `langgraph.json` above with `"chatbot": "./app/graph.py:app"`, `uv pip install "langgraph-cli[inmem]"`, and run `langgraph dev`. The printed URL opens Studio.
 </details>

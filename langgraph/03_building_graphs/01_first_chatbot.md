@@ -15,10 +15,9 @@ The "hello world" of agents is a chatbot that **remembers** the conversation. It
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.checkpoint.memory import InMemorySaver
 from langchain_core.messages import HumanMessage
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-# Offline model with two scripted turns. Swap for get_model()/ChatOllama for real replies.
-llm = FakeListChatModel(responses=["Nice to meet you, Alex!", "You said your name is Alex."])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)   # or get_model() from 01-3
 
 def chatbot(state: MessagesState) -> dict:
     return {"messages": [llm.invoke(state["messages"])]}   # add_messages appends
@@ -47,13 +46,13 @@ for m in out["messages"]:
     print(" ", m.type, "|", m.content)
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 ```
 history length: 4
   human | My name is Alex.
-  ai | Nice to meet you, Alex!
+  ai | Nice to meet you, Alex! How can I help you today?
   human | What's my name?
-  ai | You said your name is Alex.
+  ai | Your name is Alex.
 ```
 
 The second `invoke` only *added* the new question — yet the state has all **four** messages. That's the checkpointer replaying thread `demo-1`'s saved history, then the reducer appending. Use a different `thread_id` and you get a fresh, empty conversation.
@@ -62,16 +61,16 @@ The second `invoke` only *added* the new question — yet the state has all **fo
 
 ---
 
-## Going live
+## Swap the model
 
-To get real replies, swap the model — nothing else changes:
+Prefer a free local model? Swap one line — nothing else changes:
 
 ```python
 # from langchain_ollama import ChatOllama
 # llm = ChatOllama(model="qwen2.5:0.5b", temperature=0.7)
 ```
 
-Run with Ollama and turn 2 genuinely answers "Your name is Alex" from the replayed history.
+Turn 2 still answers "Your name is Alex" — from the replayed history — whichever model you use.
 
 ---
 

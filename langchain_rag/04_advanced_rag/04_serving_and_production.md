@@ -111,7 +111,7 @@ Package the app with its dependencies (a `requirements.txt` or a Dockerfile) and
 - ✅ **Reliability:** handle errors, set timeouts, add a health check.
 - ✅ Self-check: why build the chain at startup rather than per request? What is prompt injection in a RAG context?
 
-→ Next: **[Section 05 · Tool calling & agents](../05_tool_calling_and_agents/README.md)** — let the model call tools and *decide* when to retrieve. (Or jump straight to the **[Section 99 · Project](../99_project_doc_assistant/README.md)** — the complete runnable app that ties it all together.)
+→ Next: **[05 · GraphRAG](05_graph_rag.md)** — retrieval over relationships, for the questions vectors can't answer.
 
 ## Exercises
 

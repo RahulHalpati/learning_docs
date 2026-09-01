@@ -14,13 +14,13 @@ Take the template from the last module, a model, and a parser, and pipe them:
 ```python
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 
 template = ChatPromptTemplate.from_messages([
     ("system", "You are a helpful {role}."),
     ("human", "{question}"),
 ])
-llm = GenericFakeChatModel(messages=iter(["A list is an ordered collection."]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 chain = template | llm | StrOutputParser()      # ← the LCEL chain
 
@@ -28,10 +28,10 @@ print(chain.invoke({"role": "tutor", "question": "What is a list?"}))
 print("chain type:", type(chain).__name__)
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 
 ```text
-A list is an ordered collection.
+A list is an ordered, mutable collection of items in Python.
 ```
 ```text
 chain type: RunnableSequence
@@ -101,19 +101,19 @@ flowchart TD
 
 ## Exercises
 
-1. **Build and run a chain.** Make `prompt | llm | StrOutputParser()` where the prompt asks for a one-line definition of a `{term}`, using the fake model. Invoke it for `term="recursion"`. What type comes out — `AIMessage` or `str`?
+1. **Build and run a chain.** Make `prompt | llm | StrOutputParser()` where the prompt asks for a one-line definition of a `{term}`. Invoke it for `term="recursion"`. What type comes out — `AIMessage` or `str`?
 
 <details><summary>Solution</summary>
 
 ```python
 from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 prompt = ChatPromptTemplate.from_template("Define {term} in one line.")
-llm = GenericFakeChatModel(messages=iter(["Recursion is when a function calls itself."]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 chain = prompt | llm | StrOutputParser()
 out = chain.invoke({"term": "recursion"})
-print(type(out).__name__, out)   # str  Recursion is when a function calls itself.
+print(type(out).__name__, out)   # str  Recursion is when a function calls itself. (wording varies)
 ```
 
 A **`str`** — the `StrOutputParser` at the end of the pipe pulled `.content` out of the `AIMessage` for you. Without it you'd get an `AIMessage`.

@@ -7,7 +7,7 @@
 
 In production you can't `print` your way through a graph. You need to see, for every run: which nodes fired, how long each took, what state flowed through, and exactly what went into and out of each LLM call. **LangSmith** (from the LangChain team) captures all of that automatically from any LangGraph run.
 
-> This lesson is conceptual — LangSmith is a hosted service needing an API key, so there's no offline output to show. Everything else in the course runs offline; tracing is the one thing that phones home.
+> This lesson is conceptual — LangSmith is a hosted service needing an API key, so there's no offline output to show. Tracing is the one thing in the course that needs a LangSmith account.
 
 ---
 
@@ -51,7 +51,7 @@ LangSmith also does what raw logs can't:
 
 ## If you can't use LangSmith
 
-The course's offline tools still give you visibility:
+LangGraph's built-in tools still give you visibility:
 
 - `stream_mode="updates"`/`"debug"` for per-step execution.
 - `get_state_history()` ([05-2](../05_persistence_and_memory/02_time_travel.md)) to inspect any past checkpoint.

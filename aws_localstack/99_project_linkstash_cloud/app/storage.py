@@ -1,8 +1,8 @@
 """The storage layer, using boto3 against AWS services.
 
-The ONE thing that makes this run on LocalStack instead of real AWS is the
+The ONE thing that makes this run on Floci instead of real AWS is the
 `endpoint_url` — set `AWS_ENDPOINT_URL=http://localhost:4566` (or pass it) and
-every call goes to LocalStack. Unset it and the identical code talks to real AWS.
+every call goes to Floci. Unset it and the identical code talks to real AWS.
 That's the whole trick: normal SDK code, one env var.
 """
 
@@ -20,7 +20,7 @@ QUEUE = os.environ.get("EVENTS_QUEUE", "linkstash-events")
 
 
 def _endpoint() -> str | None:
-    # LocalStack exposes everything on one endpoint; real AWS uses none (SDK default).
+    # Floci exposes everything on one endpoint; real AWS uses none (SDK default).
     return os.environ.get("AWS_ENDPOINT_URL") or None
 
 

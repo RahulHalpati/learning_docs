@@ -14,7 +14,7 @@ A RAG pipeline is a *chain* of steps: build a prompt → call the LLM → parse 
 | 01 | [Prompts & messages](01_prompts_and_messages.md) | How do I build the text I send the LLM, with variables? |
 | 02 | [LCEL chains](02_lcel_chains.md) | How do I connect steps with the `\|` pipe? |
 | 03 | [Output parsers & structured output](03_output_parsers_and_structured.md) | How do I turn the reply into clean text or data? |
-| 04 | [Memory & message history](04_memory_message_history.md) | How does my app remember earlier turns? |
+| 04 | [Memory & message history](04_memory_message_history.md) | How does my app remember earlier turns?  ·  ⚪ *optional / appendix* |
 
 ## What you'll be able to do after this section
 

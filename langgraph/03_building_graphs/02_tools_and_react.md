@@ -25,13 +25,13 @@ flowchart LR
 
 ---
 
-## Building it (offline, scripted)
+## Building it
 
-A real agent binds tools to the model with `llm.bind_tools([...])`, and the model *decides* when to call them. To make that **deterministic and offline**, we script the model's decisions with `FakeMessagesListChatModel`: first it emits a tool call, then a final answer. `ToolNode`/`tools_condition` don't care where the tool call came from.
+`llm.bind_tools([...])` tells the model which tools exist; the model then *decides* when to call one. `ToolNode` runs the call and `tools_condition` routes on whether there was one.
 
 ```python
-from langchain_core.language_models.fake_chat_models import FakeMessagesListChatModel
-from langchain_core.messages import AIMessage, HumanMessage
+from langchain_openai import ChatOpenAI
+from langchain_core.messages import HumanMessage
 from langchain_core.tools import tool
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langgraph.prebuilt import ToolNode, tools_condition
@@ -41,12 +41,7 @@ def calculator(expression: str) -> str:
     """Evaluate a math expression like '85 * 0.15'."""
     return f"{expression} = {eval(expression)}"
 
-# Scripted model: turn 1 → call the tool; turn 2 → final answer using the result.
-model = FakeMessagesListChatModel(responses=[
-    AIMessage(content="", tool_calls=[
-        {"name": "calculator", "args": {"expression": "85*0.15"}, "id": "call_1"}]),
-    AIMessage(content="A 15% tip on $85 is $12.75."),
-])
+model = ChatOpenAI(model="gpt-4o-mini", temperature=0).bind_tools([calculator])
 
 def agent(state: MessagesState) -> dict:
     return {"messages": [model.invoke(state["messages"])]}
@@ -64,10 +59,10 @@ for m in out["messages"]:
     print(m.type, "|", repr(m.content), "| tool_calls:", getattr(m, "tool_calls", None) or "")
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 ```
 human | "What's a 15% tip on $85?" | tool_calls:
-ai | '' | tool_calls: [{'name': 'calculator', 'args': {'expression': '85*0.15'}, 'id': 'call_1', 'type': 'tool_call'}]
+ai | '' | tool_calls: [{'name': 'calculator', 'args': {'expression': '85*0.15'}, 'id': 'call_9xK2mQ', 'type': 'tool_call'}]
 tool | '85*0.15 = 12.75' | tool_calls:
 ai | 'A 15% tip on $85 is $12.75.' | tool_calls: []
 ```
@@ -78,16 +73,16 @@ Read the loop top to bottom: the user asks → the agent emits a **tool call** (
 
 ---
 
-## With a real (local) model
+## With a local model
 
-Swap the scripted model for a tool-calling model and the model itself decides when to call `calculator`:
+Any tool-calling model works. For a free local one:
 
 ```python
 # from langchain_ollama import ChatOllama
 # model = ChatOllama(model="qwen2.5:0.5b", temperature=0).bind_tools([calculator])
 ```
 
-`bind_tools` is what tells a real model the tool exists. (The fake model above doesn't implement `bind_tools` — it doesn't need to, since we scripted its output.) Everything else — `ToolNode`, `tools_condition`, the edges — is identical.
+Very small local models call tools unreliably (wrong tool, malformed args) — if that happens it's the model, not your graph. Everything else — `ToolNode`, `tools_condition`, the edges — is identical.
 
 ---
 
@@ -95,17 +90,17 @@ Swap the scripted model for a tool-calling model and the model itself decides wh
 
 - ✅ ReAct loop = `agent → (tools_condition) → tools → agent → … → END`.
 - ✅ `@tool` defines a callable; `ToolNode` executes the calls; `tools_condition` routes.
-- ✅ Script tool calls with `FakeMessagesListChatModel` for deterministic offline tests; use `bind_tools` on a real model in production.
+- ✅ `bind_tools` tells the model which tools exist; the model decides when to call them.
 - ✅ Self-check: which message type carries a tool's *result* back into the conversation?
 
 → Next: **[03-3 · Prebuilt agents](03_create_react_agent.md)**
 
 ## Exercises
 
-1. Add a second tool `search_web(query)` and script the model to call **both** (search, then calculate) before answering.
+1. Add a second tool `search_web(query)`, bind both, and ask something that needs both (e.g. "Look up the price of X, then add a 15% tip").
 
 <details>
 <summary>Solution</summary>
 
-Give the fake model three responses: a search tool call, a calculator tool call, then the final answer. Add `search_web` to the `ToolNode` list. The loop runs `agent → tools → agent → tools → agent → END` — two trips through `tools`.
+Add `search_web` to both `bind_tools([...])` and the `ToolNode` list. The model emits a search call, then a calculator call, then the answer: `agent → tools → agent → tools → agent → END` — two trips through `tools`. Print the messages to confirm.
 </details>

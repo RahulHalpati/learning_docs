@@ -4,15 +4,15 @@ langchain-core==1.3.2
 langchain-community==0.4.1
 langchain-text-splitters==1.1.2
 
+# Chat model (required) — OpenAI, or any OpenAI-compatible endpoint via OPENAI_BASE_URL
+langchain-openai==1.2.1
+
 # Real local embeddings (recommended; ~80MB model download on first run)
 langchain-huggingface==1.2.2
 sentence-transformers==5.5.1
 
-# Pick ONE real LLM provider (both optional — the app falls back to a fake model):
-#   local, no API key:
-langchain-ollama==1.1.0
-#   hosted / OpenAI-compatible (e.g. the free NVIDIA endpoint):
-langchain-openai==1.2.1
+# Optional: local LLM instead of OpenAI (set DOC_ASSISTANT_LLM=ollama)
+# langchain-ollama==1.1.0
 #   hosted / Anthropic Claude:
 # langchain-anthropic==1.4.6
 

@@ -70,7 +70,7 @@ A notes app is deliberately mundane — the *engineering* (schema design, auth, 
 1. **Type the code, run every server.** The MCP Inspector (Section 02) lets you see and call your tools with no model involved — use it constantly.
 2. **Keep notevault under git from Section 02.** Commit at each gate.
 3. **Do the security section for real.** The injection drill in Section 06 is the one an interviewer will probe. Reproduce the attack before you fix it.
-4. **Budget honestly.** ~31 h guided + 20–30 for the capstone.
+4. **Budget honestly.** The MCP-specific core (sections 01–03) is **~5 h** — see the [core track](README.md#-job-ready-core-track-5-h--mcp-is-a-12-day-skill). Sections 04–07 (~20 h) are production-service work you can do later or skip if you already know FastAPI; the capstone is 20–30 h.
 
 ---
 

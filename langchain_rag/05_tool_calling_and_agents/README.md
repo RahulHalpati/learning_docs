@@ -2,12 +2,14 @@
 
 > **Prerequisites:** [Section 03 · RAG fundamentals](../03_rag_fundamentals/README.md). Section 04 is helpful but not required.
 > **Time:** ~4–6 hours.
+>
+> ⚪ **Off the [core track](../README.md#-job-ready-core-track-start-here-if-the-course-feels-big).** Agents are in high demand — but they're taught in depth in the sibling **[LangGraph course](../../langgraph/)**, which is the production agent framework employers name. Do this section for the LangChain-native view of tool calling and agentic RAG; do LangGraph for the orchestration job skill.
 
 Until now your RAG pipeline has been a **fixed track**: every question runs retrieve → prompt → answer, in that exact order, every time. This section adds the piece that makes modern LLM apps feel *smart*: **tool calling** — letting the model decide, on its own, to *run code* (do math, fetch a web page, **search your documents**) and use the result in its answer. Chain those decisions together and you have an **agent**.
 
 The headline payoff for RAG: instead of *always* retrieving, the model retrieves **only when it needs to** — this is **agentic RAG**, and it's how you'd build an assistant that can search your docs, look something up on the web, *and* just say hello, all in one.
 
-> ⚠️ **This section needs a tool-capable model.** Tool calling requires a model trained for it — a capable local model like **`qwen2`** via Ollama, or a hosted **Claude / OpenAI-compatible** model. The zero-setup **fake model can't call tools**, and small local models do it unreliably. All outputs here were produced with local **`qwen2:7b`**. If you skipped the LLM setup, revisit [01.02 · Environment setup](../01_foundations/02_environment_setup.md).
+> ⚠️ **This section needs a tool-capable model.** Tool calling requires a model trained for it — a capable local model like **`qwen2`** via Ollama, or a hosted **Claude / OpenAI-compatible** model. Small local models do it unreliably. All outputs here were produced with local **`qwen2:7b`**. If you skipped the LLM setup, revisit [01.02 · Environment setup](../01_foundations/02_environment_setup.md).
 
 ## Modules
 

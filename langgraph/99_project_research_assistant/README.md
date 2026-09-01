@@ -3,7 +3,7 @@
 > **Level:** Intermediate · **Prerequisites:** Sections 01–10
 > **Time:** 2–3 h · **Verified:** 2026-07-21 (langgraph 1.2.9, langchain-core 1.5.0, Python 3.10)
 
-A complete, **offline**, tested agent that ties the whole course together: it researches a topic, writes a report, evaluates its own quality in a **self-correction loop**, and pauses for **human approval** before finalizing.
+A complete, tested agent that ties the whole course together: it researches a topic, writes a report, evaluates its own quality in a **self-correction loop**, and pauses for **human approval** before finalizing.
 
 ```mermaid
 flowchart LR
@@ -23,7 +23,7 @@ flowchart LR
 | Checkpointer + `thread_id` | [05-1](../05_persistence_and_memory/01_checkpointers.md) |
 | Human-in-the-loop approval (`interrupt`/`Command(resume=)`) | [06](../06_human_in_the_loop/README.md) |
 | Streaming (`stream_mode="updates"`) | [02-2](../02_execution_model/02_streaming.md) |
-| Swappable model (fake ↔ Ollama) | [01-3](../01_foundations/03_environment_setup.md) |
+| Swappable model (OpenAI ↔ Ollama) | [01-3](../01_foundations/03_environment_setup.md) |
 
 ## Layout
 
@@ -32,23 +32,24 @@ flowchart LR
 ├── requirements.txt
 ├── research_assistant/
 │   ├── state.py         # ResearchState (typed, with reducers)
-│   ├── providers.py     # get_model(): fake (default) or Ollama
+│   ├── providers.py     # get_model(): OpenAI (default) or Ollama
 │   ├── tools.py         # offline deterministic "search"
 │   ├── graph.py         # build_graph(): the whole agent
 │   └── run.py           # CLI entry point
 └── tests/
-    └── test_graph.py    # 5 offline tests
+    └── test_graph.py    # 5 graph-logic tests (need OPENAI_API_KEY)
 ```
 
-## Run it (offline, no API key)
+## Run it
 
 ```bash
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv venv && source .venv/bin/activate
+uv pip install -r requirements.txt
+export OPENAI_API_KEY=sk-...
 python -m research_assistant.run "LangGraph persistence"
 ```
 
-**Output (real run):**
+**Output (representative — the report wording varies):**
 ```
 · research
 · write
@@ -58,7 +59,7 @@ python -m research_assistant.run "LangGraph persistence"
 · evaluate
 
 DRAFT (quality 1.00):
-  Report on LangGraph persistence: LangGraph models agents as state + nodes + edges. Checkpointers give LangGraph memory, resume, and time-travel.
+  LangGraph models agents as state, nodes and edges. Checkpointers give those graphs memory, resume, and time-travel.
 
 [auto-approving]
 
@@ -74,17 +75,17 @@ Notice `research → write → evaluate` ran **twice**: the first pass scored be
 pytest -q
 ```
 
-**Output (real run):**
+**Output (with `OPENAI_API_KEY` set):**
 ```
 .....                                                                    [100%]
-5 passed in 0.27s
+5 passed
 ```
 
-The tests assert the self-correction loop runs the right number of times, the graph pauses at the HITL gate, and approve/reject are recorded — all with **no network**.
+The tests assert the self-correction loop runs the right number of times, the graph pauses at the HITL gate, and approve/reject are recorded — graph *logic*, never the model's wording. Without a key they are skipped.
 
 ## Go live
 
-Set `LANGGRAPH_LLM=ollama` (after `ollama pull qwen2.5:0.5b` and `pip install langchain-ollama`) to generate the report text with a real local model — the graph, tools, loop, and approval gate are unchanged.
+Set `LANGGRAPH_LLM=ollama` (after `ollama pull qwen2.5:0.5b` and `uv pip install langchain-ollama`) to generate the report with a free local model instead of OpenAI — the graph, tools, loop, and approval gate are unchanged.
 
 ## Extend it
 

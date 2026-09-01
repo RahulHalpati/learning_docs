@@ -16,7 +16,9 @@ This is the heart of the course. You'll build RAG from the ground up: turn text 
 | 03 | [Loaders & splitters](03_loaders_and_splitters.md) | How do I turn my files into searchable chunks? |
 | 04 | [Build a RAG chain](04_build_a_rag_chain.md) | How do I connect retrieval + LLM into an answer? |
 | 05 | [Retrieval strategies](05_retrieval_strategies.md) | How do I get the *right* chunks, not just some chunks? |
-| 06 | [RAG over web pages](06_web_sources.md) | How do I ground answers in a website, not just local files? |
+| 06 | [RAG over web pages](06_web_sources.md) | How do I ground answers in a website, not just local files?  ·  ⚪ *optional / appendix* |
+| 07 | [pgvector on Postgres](07_pgvector_postgres.md) | How do I run production RAG on the database I already have? |
+| 08 | [Choosing a production vector DB](08_production_vector_dbs.md) | Qdrant, Pinecone, Weaviate, Milvus — which, and how do I justify it?  ·  ⚪ *optional / appendix* |
 
 ## What you'll be able to do after this section
 

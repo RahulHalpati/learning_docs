@@ -88,18 +88,25 @@ print([d.metadata["source"] for d in docs])     # ['refunds', ...]
 
 `InMemoryVectorStore` keeps everything in RAM and vanishes when your program exits — perfect for learning and small/ephemeral data. Production stores persist to disk or a server, but expose the **same** `add_documents` / `similarity_search` / `as_retriever` interface, so swapping is a near one-liner:
 
-| Store | Good for | Swap |
-|-------|----------|------|
-| `InMemoryVectorStore` | learning, tests, small data | built into `langchain-core` |
-| **FAISS** | fast local, save/load to disk | `pip install langchain-community faiss-cpu` |
-| **Chroma** | local persistent DB | `pip install langchain-chroma` |
-| **Pinecone/Weaviate/pgvector** | large-scale, hosted/server | provider packages |
+| Store | Category | Good for | Install |
+|-------|----------|----------|---------|
+| `InMemoryVectorStore` | embedded | learning, tests, small data | built into `langchain-core` |
+| **FAISS** | embedded library | fast local, save/load to disk | `uv add langchain-community faiss-cpu` |
+| **Chroma** / LanceDB | embedded DB | local persistence, prototypes | `uv add langchain-chroma` |
+| **pgvector** | "the DB you already run" | **the 2026 production default** (≤ ~50M vectors) | `uv add langchain-postgres` → [07](07_pgvector_postgres.md) |
+| **Qdrant** | self-hosted engine | pure-vector scale, strong filtering | `uv add langchain-qdrant` → [08](08_production_vector_dbs.md) |
+| **Weaviate** | self-hosted / cloud | hybrid search built in | provider package |
+| **Pinecone** | managed SaaS | zero-ops, enterprise SLAs | provider package |
+| **Milvus** / Zilliz | self-hosted / managed | massive scale, on-prem | provider package |
+| **Neo4j** (`Neo4jVector`) | graph + vector | when *relationships* are the query | [04-5 · GraphRAG](../04_advanced_rag/05_graph_rag.md) |
+
+> **Which one do I actually use?** Learn on `InMemoryVectorStore`/FAISS (zero setup), ship on **pgvector** unless you can name the bottleneck that forces a dedicated engine. Lessons [07](07_pgvector_postgres.md) and [08](08_production_vector_dbs.md) cover both, plus the **HNSW/IVF indexing** vocabulary job specs ask for by name.
 
 > **One caveat we hit:** `InMemoryVectorStore` doesn't implement *relevance-score-threshold* retrieval (it raises `NotImplementedError`). Use `similarity_search_with_score` to filter by score manually (Module 05), or switch to FAISS/Chroma for the built-in threshold retriever. The basic `similarity` and `mmr` retrievers work fine on InMemory.
 
 ## Persisting to disk with FAISS
 
-`InMemoryVectorStore` forgets everything when your program exits, so you **re-embed every run** — fine for 10 chunks, painful for 10,000. **FAISS** is a local store you can **save to disk once and load instantly** afterward (`pip install faiss-cpu`):
+`InMemoryVectorStore` forgets everything when your program exits, so you **re-embed every run** — fine for 10 chunks, painful for 10,000. **FAISS** is a local store you can **save to disk once and load instantly** afterward (`uv pip install faiss-cpu`):
 
 ```python
 from langchain_community.vectorstores import FAISS

@@ -39,9 +39,9 @@ A minimal chatbot node just appends the model's reply:
 ```python
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langchain_core.messages import HumanMessage
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-llm = FakeListChatModel(responses=["Hello! How can I help?"])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 def chatbot(state: MessagesState) -> dict:
     return {"messages": [llm.invoke(state["messages"])]}   # add_messages appends it
@@ -55,9 +55,9 @@ out = app.invoke({"messages": [HumanMessage(content="hi")]})
 print([(m.type, m.content) for m in out["messages"]])
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 ```
-[('human', 'hi'), ('ai', 'Hello! How can I help?')]
+[('human', 'hi'), ('ai', 'Hello! How can I assist you today?')]
 ```
 
 ---
@@ -145,9 +145,9 @@ Use `TypedDict` unless you specifically want validation at the graph boundary (c
 ```python
 from langgraph.graph import MessagesState, StateGraph, START, END
 from langchain_core.messages import HumanMessage
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-llm = FakeListChatModel(responses=["hi back"])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 class S(MessagesState):
     turn_count: int
 

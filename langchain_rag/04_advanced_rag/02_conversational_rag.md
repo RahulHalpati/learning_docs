@@ -61,15 +61,15 @@ print("turn2:", conversational.invoke({"input": "And how long does it take?"}, c
 print("history msgs:", len(histories["user-1"].messages))
 ```
 
-**Output (real run, fake model scripted to show the flow):**
+**Output (representative — wording varies by model):**
 
 ```text
-turn1: It costs $14.99.
-turn2: It takes 1-2 days.
+turn1: Express shipping costs $14.99.
+turn2: It takes 1–2 business days.
 history msgs: 4
 ```
 
-Turn 2 worked because the LLM saw turn 1 in the `history` placeholder, so it understood "it" = express shipping. (With a real LLM the wording is the model's own; the *mechanism* is what's verified here.)
+Turn 2 worked because the LLM saw turn 1 in the `history` placeholder, so it understood "it" = express shipping.
 
 ## Approach B — reformulate the question first (history-aware retrieval)
 
@@ -111,11 +111,11 @@ Every turn adds messages, and prompts have a token limit (Section 02.04). For lo
 
 ## Exercises
 
-1. **Build a 2-turn conversation.** Index a few facts, build the Approach-A conversational chain (fake model is fine), and run a question + a follow-up that uses "it"/"that". Confirm the history grows and the follow-up makes sense.
+1. **Build a 2-turn conversation.** Index a few facts, build the Approach-A conversational chain, and run a question + a follow-up that uses "it"/"that". Confirm the history grows and the follow-up makes sense.
 
 <details><summary>Solution</summary>
 
-Use the Approach-A code with your own docs; script the fake model with two replies. After two turns, `histories[sid].messages` has 4 entries (2 human, 2 AI). With a *real* LLM, the follow-up referencing "it" resolves correctly because the prior turn is in the `history` placeholder — that's the whole point of wrapping the chain in `RunnableWithMessageHistory`.
+Use the Approach-A code with your own docs. After two turns, `histories[sid].messages` has 4 entries (2 human, 2 AI). The follow-up referencing "it" resolves correctly because the prior turn is in the `history` placeholder — that's the whole point of wrapping the chain in `RunnableWithMessageHistory`.
 </details>
 
 2. **Where A breaks.** Give an example follow-up where retrieving on the raw text would fetch the *wrong* chunks, motivating Approach B.

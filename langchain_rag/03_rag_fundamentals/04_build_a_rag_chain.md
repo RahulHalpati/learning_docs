@@ -133,29 +133,6 @@ The information provided does not include details about the CEO.
 
 No hallucinated name. The retrieval supplied no CEO info, and the "ONLY the context" instruction made the model admit it. *That* is the difference between RAG and a bare LLM.
 
-## Running it offline (no LLM)
-
-To see the *plumbing* without any LLM, swap in the fake model — the chain is identical:
-
-```python
-from langchain_core.language_models import GenericFakeChatModel
-
-fake = GenericFakeChatModel(messages=iter(["Returns are allowed within 30 days."]))
-offline_chain = (
-    {"context": retriever | format_docs, "question": RunnablePassthrough()}
-    | prompt | fake | StrOutputParser()
-)
-print(offline_chain.invoke("how long are returns?"))
-```
-
-**Output (real run):**
-
-```text
-Returns are allowed within 30 days.
-```
-
-Same chain, fake model — proof the *structure* works with zero setup. Swap `fake` for `ChatOllama(...)` to get real answers. This is exactly the swap the capstone's `llm.py` automates.
-
 ## Returning sources
 
 Because chunks carry `metadata`, you can also return *where* an answer came from — build a chain that outputs both the answer and the source docs (you'll do this in the capstone). Citing sources is a major reason teams choose RAG: answers are auditable.
@@ -165,18 +142,18 @@ Because chunks carry `metadata`, you can also return *where* an answer came from
 - ✅ A RAG chain is **`{context: retriever | format_docs, question: passthrough} | prompt | llm | parser`** — LCEL you already know, with retrieval on the front.
 - ✅ A small `format_docs` joins retrieved `Document`s into the prompt's `{context}` string.
 - ✅ The **"answer using ONLY the context"** instruction grounds the model — verified it answered from docs *and* refused to invent a CEO.
-- ✅ Swap the real LLM for `GenericFakeChatModel` to run the whole pipeline offline; metadata lets you return sources.
+- ✅ Swapping the chat model (`ChatOpenAI` ↔ `ChatOllama` ↔ `ChatNVIDIA`) changes nothing else in the chain; metadata lets you return sources.
 - ✅ Self-check: what are the two keys in the dict step, and what does each produce? What makes the model say "I don't know"?
 
 → Next: **[05 · Retrieval strategies](05_retrieval_strategies.md)** — getting the *right* chunks into that context.
 
 ## Exercises
 
-1. **Build your own RAG chain.** Index 4–5 facts about a topic, build the LCEL RAG chain (use the fake model if you have no LLM), and ask a question whose answer is in your facts. Confirm the answer reflects your data.
+1. **Build your own RAG chain.** Index 4–5 facts about a topic, build the LCEL RAG chain, and ask a question whose answer is in your facts. Confirm the answer reflects your data.
 
 <details><summary>Solution</summary>
 
-Reuse the Step 1–3 code with your own `Document`s. With the fake model the chain returns whatever you scripted (proving wiring); with a real model it answers from your facts. The structure never changes — that's the LCEL win. The key check: the retrieved `context` (print `retriever.invoke(question)`) actually contains the answer, so the LLM has what it needs.
+Reuse the Step 1–3 code with your own `Document`s. The chain answers from your facts. The structure never changes — that's the LCEL win. The key check: the retrieved `context` (print `retriever.invoke(question)`) actually contains the answer, so the LLM has what it needs.
 </details>
 
 2. **Force a hallucination, then prevent it.** Ask your chain something *not* in the docs. With the "ONLY the context" instruction, what should it say? Remove that instruction from the prompt — what changes (with a real model)?

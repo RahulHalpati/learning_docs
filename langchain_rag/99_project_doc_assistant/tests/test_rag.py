@@ -1,18 +1,20 @@
-"""Deterministic, offline tests for the document assistant.
+"""Tests for the document assistant.
 
-These use a *fake* embedding model and a *fake* chat model, so they run instantly
-with no network, no API key, and no model download — yet they exercise the real
-ingestion and RAG-chain code.
+Ingestion/retrieval tests use a deterministic *fake* embedding model, so they run
+instantly offline. The two end-to-end RAG tests call the real chat model (OpenAI)
+and real local embeddings; they are skipped unless ``OPENAI_API_KEY`` is set.
 """
 
+import os
 from pathlib import Path
 
+import pytest
 from langchain_core.documents import Document
 from langchain_core.embeddings import DeterministicFakeEmbedding
-from langchain_core.language_models import GenericFakeChatModel
-from langchain_core.vectorstores import InMemoryVectorStore
+from langchain_openai import ChatOpenAI
 
 from rag_app.ingest import build_vectorstore, load_documents, split_documents
+from rag_app.llm import get_embeddings
 from rag_app.rag import (
     build_rag_chain,
     build_rag_chain_with_sources,
@@ -21,6 +23,10 @@ from rag_app.rag import (
 )
 
 DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+
+needs_openai = pytest.mark.skipif(
+    not os.environ.get("OPENAI_API_KEY"), reason="set OPENAI_API_KEY to run live-LLM tests"
+)
 
 
 def test_load_documents_reads_all_files():
@@ -51,14 +57,15 @@ def test_retriever_returns_k_documents():
     assert all(isinstance(h, Document) for h in hits)
 
 
-def test_rag_chain_end_to_end_with_fakes():
-    store = build_vectorstore(DATA_DIR, DeterministicFakeEmbedding(size=384))
+@needs_openai
+def test_rag_chain_end_to_end():
+    store = build_vectorstore(DATA_DIR, get_embeddings())
     retriever = store.as_retriever(search_kwargs={"k": 2})
-    llm = GenericFakeChatModel(messages=iter(["Returns are allowed within 30 days."]))
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     chain = build_rag_chain(retriever, llm)
 
     answer = chain.invoke("How long are returns?")
-    assert answer == "Returns are allowed within 30 days."
+    assert "30" in answer          # grounded in refunds.md
 
 
 def test_unique_sources_dedupes_and_preserves_order():
@@ -70,14 +77,15 @@ def test_unique_sources_dedupes_and_preserves_order():
     assert unique_sources(docs) == ["refunds.md", "shipping.md"]
 
 
+@needs_openai
 def test_rag_chain_with_sources_returns_answer_and_sources():
-    store = build_vectorstore(DATA_DIR, DeterministicFakeEmbedding(size=384))
+    store = build_vectorstore(DATA_DIR, get_embeddings())
     retriever = store.as_retriever(search_kwargs={"k": 2})
-    llm = GenericFakeChatModel(messages=iter(["Returns are allowed within 30 days."]))
+    llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
     chain = build_rag_chain_with_sources(retriever, llm)
 
     result = chain.invoke("How long are returns?")
-    assert result["answer"] == "Returns are allowed within 30 days."
+    assert "30" in result["answer"]
     # sources are a de-duplicated list of the real capstone files that were retrieved
     assert isinstance(result["sources"], list) and result["sources"]
     assert set(result["sources"]) <= {"refunds.md", "shipping.md", "company.md"}

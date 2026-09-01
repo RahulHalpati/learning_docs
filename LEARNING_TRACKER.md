@@ -3,6 +3,8 @@
 Your progress across every course in this repo, as a checkable to-do. This is the counterpart to the [README](README.md) (which is the catalog) — this page is where you track what you've *done*.
 
 > ⏱️ **On a deadline?** If you're doing the 3-month GenAI-engineer sprint, follow the **[3-Month Sprint plan](3_MONTH_GENAI_SPRINT.md)** instead — it cuts this list down to the ~29 sections that matter and schedules them week by week. Use this full tracker only for the courses that plan includes.
+>
+> 🎯 **Job hunting?** The [Job Tracker](JOB_TRACKER.md) is where you log target roles, applications, and the readiness gate that unlocks the $30k+ USD remote band.
 
 ## How to use
 
@@ -15,6 +17,8 @@ Your progress across every course in this repo, as a checkable to-do. This is th
   # overall % complete (counts only checkbox lines, ignores this example)
   awk '/^- \[x\]/{d++} /^- \[[ x]\]/{t++} END{printf "%d/%d sections done (%.0f%%)\n", d, t, 100*d/t}' LEARNING_TRACKER.md
   ```
+
+🎯 Prepping for a call? → **[Interview question bank (132 Qs)](INTERVIEW_QUESTIONS.md)**
 
 **Status legend:** `gate` = section ends in a graded challenge · 🏁 = capstone project · ⭐ = highest-leverage for a job-ready backend/AI role.
 
@@ -161,12 +165,15 @@ Takes the container your backend course produces all the way to a cloud deployme
 - [ ] [04 · Production](opentofu_iac/04_production/README.md)
 - [ ] 🏁 [Project: Tofu linkstash](opentofu_iac/99_project_tofu_linkstash/README.md)
 
-### AWS on LocalStack
+### AWS locally (Floci)
 - [ ] [01 · Foundations](aws_localstack/01_foundations/README.md)
-- [ ] [02 · Core services](aws_localstack/02_core_services/README.md)
-- [ ] [03 · IaC with OpenTofu](aws_localstack/03_iac_with_opentofu/README.md)
-- [ ] [04 · Testing & CI](aws_localstack/04_testing_and_ci/README.md)
-- [ ] [05 · More services](aws_localstack/05_more_services/README.md)
+- [ ] [02 · IAM & access ⭐](aws_localstack/02_iam_and_access/README.md)
+- [ ] [03 · Core services](aws_localstack/03_core_services/README.md)
+- [ ] [04 · IaC with OpenTofu](aws_localstack/04_iac_with_opentofu/README.md)
+- [ ] [05 · Testing & CI](aws_localstack/05_testing_and_ci/README.md)
+- [ ] [06 · More services (KMS, CloudWatch, …)](aws_localstack/06_more_services/README.md)
+- [ ] [07 · Networking & compute (VPC, SGs, EC2)](aws_localstack/07_networking_and_compute/README.md)
+- [ ] [08 · Bedrock & GenAI](aws_localstack/08_bedrock_and_genai/README.md)
 - [ ] 🏁 [Project: linkstash cloud](aws_localstack/99_project_linkstash_cloud/README.md)
 
 ---
@@ -204,6 +211,16 @@ Takes the container your backend course produces all the way to a cloud deployme
 ---
 
 ## 🗄️ Data & domain track
+
+### Snowflake — the cloud data platform
+> ⚠️ Uses a **real trial account** (30 days / $400 credits) — no emulator exists. Set a resource monitor on day one.
+- [ ] [01 · Foundations (architecture, trial, warehouses & credits)](snowflake_data_platform/01_foundations/README.md)
+- [ ] [02 · SQL, tables & loading data](snowflake_data_platform/02_sql_and_loading/README.md)
+- [ ] [03 · Python: connector & Snowpark](snowflake_data_platform/03_python_and_snowpark/README.md)
+- [ ] [04 · Security & RBAC](snowflake_data_platform/04_security_and_rbac/README.md)
+- [ ] [05 · Performance & cost ⭐](snowflake_data_platform/05_performance_and_cost/README.md)
+- [ ] [06 · Pipelines & data engineering](snowflake_data_platform/06_pipelines_and_engineering/README.md)
+- [ ] 🏁 [Capstone: linkstash analytics](snowflake_data_platform/99_capstone_linkstash_analytics.md)
 
 ### Network Inventory
 - [ ] [01 · Inventory management](network_inventory/01_inventory_management.md)

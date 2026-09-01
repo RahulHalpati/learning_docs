@@ -60,9 +60,9 @@ Stream the LLM's output as it's produced. Each item is `(message_chunk, metadata
 ```python
 from langgraph.graph import StateGraph, START, END, MessagesState
 from langchain_core.messages import HumanMessage
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-llm = FakeListChatModel(responses=["Hi there, friend!"])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 def chat(s: MessagesState): return {"messages": [llm.invoke(s["messages"])]}
 
 g = StateGraph(MessagesState); g.add_node("chat", chat)
@@ -75,12 +75,12 @@ for chunk, meta in g.compile().stream(
 print()
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 ```
-Hi there, friend!
+Hello! How can I assist you today?
 ```
 
-(Under the hood that arrived one character at a time — even the *fake* model streams — with `meta["langgraph_node"] == "chat"` on each chunk so you know which node produced it.)
+(Under the hood that arrived token by token, with `meta["langgraph_node"] == "chat"` on each chunk so you know which node produced it.)
 
 ---
 

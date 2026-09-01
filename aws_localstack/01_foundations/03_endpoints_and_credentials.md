@@ -4,7 +4,7 @@
 > **Time:** 20 min · **Verified:** 2026-07-16
 
 The whole course rests on one mechanism: **override the endpoint**. Here's how to
-do it from each tool, so you can point *anything* at LocalStack — and back at real
+do it from each tool, so you can point *anything* at Floci — and back at real
 AWS by removing one setting.
 
 ---
@@ -23,7 +23,7 @@ s3 = boto3.client("s3", endpoint_url="http://localhost:4566")
 s3 = boto3.client("s3", endpoint_url=os.environ.get("AWS_ENDPOINT_URL") or None)
 ```
 
-With `AWS_ENDPOINT_URL=http://localhost:4566` set, calls go to LocalStack; unset,
+With `AWS_ENDPOINT_URL=http://localhost:4566` set, calls go to Floci; unset,
 `endpoint_url=None` and boto3 uses the real AWS defaults. **One env var flips the
 whole app** — exactly what [`app/storage.py`](../99_project_linkstash_cloud/app/storage.py)
 does.
@@ -52,7 +52,7 @@ interactively; use the explicit flag in scripts where you want it visible.
 
 ## OpenTofu / Terraform
 
-The `aws` provider takes an `endpoints` block plus a few `skip_*` flags (LocalStack
+The `aws` provider takes an `endpoints` block plus a few `skip_*` flags (Floci
 has no real IAM/account to validate against). From the capstone's
 [`infra/main.tf`](../99_project_linkstash_cloud/infra/main.tf):
 
@@ -75,13 +75,13 @@ provider "aws" {
 
 Delete that endpoints/skip block and the identical resources provision to **real
 AWS**. (The `tflocal` wrapper automates this block, but writing it once shows
-exactly what's happening — [03-1](../03_iac_with_opentofu/01_aws_provider_against_localstack.md).)
+exactly what's happening — [04-1](../04_iac_with_opentofu/01_aws_provider_against_floci.md).)
 
 ---
 
 ## Credentials: present but ignored
 
-LocalStack doesn't check credentials, but the SDKs/CLI refuse to run without
+Floci doesn't check credentials, but the SDKs/CLI refuse to run without
 *some*. Set dummy values once via env:
 
 ```bash
@@ -91,8 +91,8 @@ export AWS_DEFAULT_REGION=us-east-1
 export AWS_ENDPOINT_URL=http://localhost:4566
 ```
 
-That's the standard LocalStack environment — the capstone `Makefile` exports
-exactly these. Region matters (resources are per-region even in LocalStack); the
+That's the standard Floci environment — the capstone `Makefile` exports
+exactly these. Region matters (resources are per-region even in Floci); the
 keys are placeholders.
 
 ---
@@ -101,7 +101,7 @@ keys are placeholders.
 
 - ✅ Everything hinges on the **endpoint override**: `endpoint_url` (boto3),
   `--endpoint-url`/`awslocal` (CLI), `endpoints{}` (OpenTofu).
-- ✅ Drive it from **`AWS_ENDPOINT_URL`** so the same code targets LocalStack or
+- ✅ Drive it from **`AWS_ENDPOINT_URL`** so the same code targets Floci or
   real AWS by one variable.
 - ✅ Credentials are **required but ignored** — use `test`/`test`; set a real
   region.
@@ -115,9 +115,9 @@ what does it enable?
 
 If `AWS_ENDPOINT_URL` is unset, `os.environ.get(...)` returns `None`, and passing
 `endpoint_url=None` tells boto3 to use its **default (real AWS) endpoints**. So the
-*same code* runs against LocalStack when the var is set and against real AWS when
+*same code* runs against Floci when the var is set and against real AWS when
 it isn't — no code change to promote from local dev to production.
 
 </details>
 
-**→ Next: [02-1 · S3 (object storage)](../02_core_services/01_s3.md)**
+**→ Next: [02-1 · Identity: IAM & STS](../02_iam_and_access/01_access_model_iam_sts.md)** — who can call what, before you call anything.

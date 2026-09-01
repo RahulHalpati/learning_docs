@@ -17,7 +17,7 @@ The prebuilt agent has a new home in the 1.x era:
 # LangGraph ≤ 0.x and still-working-but-deprecated in 1.x:
 from langgraph.prebuilt import create_react_agent
 
-# LangGraph 1.x preferred location (pip install langchain):
+# LangGraph 1.x preferred location (uv pip install langchain):
 from langchain.agents import create_agent
 ```
 
@@ -27,7 +27,7 @@ Importing `create_react_agent` from `langgraph.prebuilt` on 1.x prints a `LangGr
 
 ## The one-liner
 
-The prebuilt agent needs a model that supports **tool calling** (`bind_tools`), so we use a local Ollama model here (the plain fake model can't bind tools):
+The prebuilt agent needs a model that supports **tool calling** (`bind_tools`). `ChatOpenAI` does; this run used a local Ollama model to show it works there too:
 
 ```python
 from langchain_ollama import ChatOllama
@@ -92,7 +92,7 @@ agent = create_react_agent(
 )
 ```
 
-> **Tip:** Structured output and reliable tool selection are where small local models struggle. If `qwen2.5:0.5b` picks the wrong tool or malforms JSON, that's the *model*, not your graph — try `qwen2:7b` or a hosted model. The fake-model tests in earlier lessons exist precisely so your *wiring* is verified independently of model quality.
+> **Tip:** Structured output and reliable tool selection are where small local models struggle. If `qwen2.5:0.5b` picks the wrong tool or malforms JSON, that's the *model*, not your graph — try `qwen2:7b` or a hosted model. When in doubt, run the same graph on `gpt-4o-mini` to separate wiring bugs from model quality.
 
 ---
 
@@ -111,10 +111,10 @@ Start with the prebuilt agent; graduate to a custom graph the moment your contro
 ## Recap & next
 
 - ✅ The prebuilt agent wires the whole ReAct loop; in v1 prefer `langchain.agents.create_agent` (the `langgraph.prebuilt` import is deprecated).
-- ✅ It needs a **tool-calling** model (`bind_tools`) — hence Ollama, not the plain fake model.
+- ✅ It needs a **tool-calling** model (`bind_tools`) — `gpt-4o-mini`, or a capable local model like `qwen2.5`.
 - ✅ Knobs: `prompt`, `checkpointer`, `response_format`, `state_schema`, `pre_model_hook`, `store`.
 - ✅ Drop to a custom graph when control flow outgrows a single tool loop.
-- ✅ Self-check: why can't `create_react_agent` use `FakeListChatModel`?
+- ✅ Self-check: what must a model support for `create_react_agent` to work with it?
 
 → Next: **[03-4 · The functional API](04_functional_api.md)**
 

@@ -8,11 +8,11 @@ terraform {
   }
 }
 
-# Point the REAL aws provider at LocalStack. Remove this whole endpoints/skip block
+# Point the REAL aws provider at Floci. Remove this whole endpoints/skip block
 # and the identical config provisions real AWS. That's the only difference.
 provider "aws" {
   region                      = "us-east-1"
-  access_key                  = "test" # LocalStack ignores creds; any value works
+  access_key                  = "test" # Floci ignores creds; any value works
   secret_key                  = "test"
   s3_use_path_style           = true
   skip_credentials_validation = true

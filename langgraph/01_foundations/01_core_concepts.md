@@ -39,10 +39,9 @@ class ResearchState(TypedDict):
 A node is a **function** that receives the current state, does work, and returns a **partial** update — only the keys it changes. LangGraph merges that update into the state for you.
 
 ```python
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-# Offline, deterministic model — swap for a real chat model in production.
-llm = FakeListChatModel(responses=["RAG grounds answers in retrieved documents."])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)   # reads OPENAI_API_KEY
 
 def search_node(state: ResearchState) -> dict:
     """Gather sources for the query. Returns ONLY the keys it changes."""
@@ -134,7 +133,7 @@ class DedupState(TypedDict):
 
 ---
 
-## All four together (offline, runnable)
+## All four together (runnable)
 
 A research pipeline that loops until it has enough findings, then writes a report:
 
@@ -142,13 +141,9 @@ A research pipeline that loops until it has enough findings, then writes a repor
 from typing import TypedDict, Annotated, Literal
 import operator
 from langgraph.graph import StateGraph, START, END
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-llm = FakeListChatModel(responses=[
-    "Fact set 1: RAG grounds answers in retrieved documents.",
-    "Fact set 2: RAG reduces hallucinations and enables citations.",
-    "Report: RAG improves enterprise AI by grounding answers in private data with citations.",
-])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 class PipelineState(TypedDict):
     topic: str
@@ -156,9 +151,9 @@ class PipelineState(TypedDict):
     quality_score: float
     final_report: str
 
-def research(state):     return {"findings": [llm.invoke(f"Facts: {state['topic']}").content]}
-def evaluate(state):     return {"quality_score": min(sum(len(f) for f in state["findings"]) / 120, 1.0)}
-def write_report(state): return {"final_report": llm.invoke("Write a report").content}
+def research(state):     return {"findings": [llm.invoke(f"State one fact about {state['topic']}, in one sentence.").content]}
+def evaluate(state):     return {"quality_score": min(len(state["findings"]) / 2, 1.0)}   # 2 findings = good enough
+def write_report(state): return {"final_report": llm.invoke("Write a two-sentence report from these findings:\n" + "\n".join(state["findings"])).content}
 
 def quality_gate(state) -> Literal["research", "write_report"]:
     return "research" if state.get("quality_score", 0) < 0.6 else "write_report"
@@ -180,10 +175,10 @@ print("REPORT:", result["final_report"])
 print(f"Quality: {result['quality_score']:.2f} · Findings: {len(result['findings'])}")
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 ```
-REPORT: Report: RAG improves enterprise AI by grounding answers in private data with citations.
-Quality: 0.97 · Findings: 2
+REPORT: RAG improves enterprise AI by grounding answers in an organisation's own documents, which reduces hallucinations. It also makes answers auditable through citations to the retrieved sources.
+Quality: 1.00 · Findings: 2
 ```
 
 Notice `Findings: 2` — the first pass scored below `0.6`, so `quality_gate` routed **back** to `research` (a cycle), and the `operator.add` reducer *accumulated* the second finding instead of overwriting the first. That's all four primitives in one run.

@@ -28,11 +28,9 @@ def research(state: ResearchState) -> dict:
 
 
 def write(state: ResearchState) -> dict:
-    # A real build would prompt an LLM with the sources; offline we compose deterministically
-    # but still route the text through the model so swapping to Ollama "just works".
-    body = " ".join(state["sources"])
-    llm = get_model(responses=[f"Report on {state['topic']}: {body}"])
-    report = llm.invoke(f"Write a report on {state['topic']}").content
+    prompt = (f"Write a two-sentence report on '{state['topic']}' using ONLY these sources:\n"
+              + "\n".join(f"- {s}" for s in state["sources"]))
+    report = get_model().invoke(prompt).content
     return {"draft_report": report, "status": "writing",
             "messages": [AIMessage(content="Drafted a report.")]}
 

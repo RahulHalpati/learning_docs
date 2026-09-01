@@ -1,8 +1,8 @@
-"""Integration tests against LocalStack.
+"""Integration tests against Floci.
 
-These require LocalStack running and the infra applied (`make up && make apply`),
+These require Floci running and the infra applied (`make up && make apply`),
 with AWS_ENDPOINT_URL=http://localhost:4566 in the environment. They exercise real
-boto3 calls — the same code path as production, just pointed at LocalStack.
+boto3 calls — the same code path as production, just pointed at Floci.
 """
 
 import os

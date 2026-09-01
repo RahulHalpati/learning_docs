@@ -1,4 +1,4 @@
-"""Config-from-AWS tests: Secrets Manager + SSM Parameter Store, against LocalStack."""
+"""Config-from-AWS tests: Secrets Manager + SSM Parameter Store, against Floci."""
 
 import os
 

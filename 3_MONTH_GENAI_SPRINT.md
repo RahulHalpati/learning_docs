@@ -1,154 +1,65 @@
-# 🎯 3-Month GenAI Engineer Sprint
+# 🏃 3-Month GenAI Sprint — Sep → Nov 2026, job switch in Jan 2027
 
-> **Your constraints:** ~12 hrs/week (evenings) · already know Python + basic FastAPI · target = **AI/GenAI engineer**.
-> **The math:** ~12 weeks × 12 hrs ≈ **144 hours**. That's a scalpel budget. This plan cuts ~75% of the repo and keeps only what gets you *interview-ready with a portfolio*.
+The single track to follow. Ignore the full [catalog](README.md) until this is done — everything here was chosen against **what job postings actually screen for in 2026**, not against what's in the repo.
 
-> ⚡ **Interview incoming — pub/sub required.** Don't wait for its slot in the schedule. Read **[08-4 · Pub/sub & cross-worker real-time](fastapi_complete/08_redis_caching_jobs/04_pubsub_realtime.md)** now (~40 min) — it's standalone. Then rehearse the talking points below. The one line that lands it: *"pub/sub broadcasts to every subscriber with no persistence; a queue delivers one message durably to one worker — notify-many-now vs get-one-job-done."*
->
-> **Cloud/backend interview?** The role you got invited to leans backend + cloud (GCP, Pub/Sub, Gunicorn, Terraform). Warm up with the **[Cloud & Messaging Interview Cheat Sheet](INTERVIEW_CLOUD_CHEATSHEET.md)** — GCP-from-AWS mapping, the three-way Pub/Sub distinction, and Gunicorn/Terraform quick-answers.
->
-> **Interview prep checklist:**
-> - [ ] Read lesson 08-4; run the two-terminal `redis-cli` exercise (`SUBSCRIBE` / `PUBLISH`) so you've *seen* it, not just read it
-> - [ ] Can explain **pub/sub vs queue** in one breath (delivery, persistence, use case)
-> - [ ] Can explain **why one process can't broadcast to another's WebSocket clients**, and how Redis pub/sub fixes it (the cross-worker fan-out)
-> - [ ] Can name the **at-most-once catch** and what you'd switch to for durable broadcast (**Redis Streams** / a broker)
-> - [ ] Can sketch the code shape: **publish** = one-line fire-and-forget; **subscribe** = long-lived listener in **lifespan**, on a **dedicated `redis.pubsub()` connection**
+## 📈 Why this order (market snapshot, Aug 2026)
 
-## The honest frame (read this once)
+- **AI engineer is the #1 fastest-growing role** (postings +143% YoY, ~3:1 demand-to-candidate gap). Backend-only roles are stable but deprioritized — the market has bifurcated toward AI-integration engineers.
+- **LangChain is the #1 hiring keyword** — appears in ~34% of agentic-AI listings. **RAG is the dominant enterprise pattern**: a CV without vector DBs, chunking, embeddings, and reranking is invisible.
+- **LangGraph is the leading production-agent framework** in listings.
+- **"Eval literacy" is the top screening differentiator** — golden datasets, LLM-as-judge, regression gates. It separates demo-builders from production engineers.
+- **MCP integration** is an explicit screen in 2026 postings and still scarce among candidates.
+- Median AI-engineer hire has ~3.7 yrs experience — your Python/FastAPI background + this track is exactly the profile.
 
-144 hours makes you **interview-ready with a deployed portfolio** — not guaranteed an offer at day 90. Offers come from the portfolio *plus* applications you start in **Week 9**, not Week 12, and continue past month 3. Interviews take weeks; don't wait for "perfect" to apply.
+**What this means:** your Python + FastAPI is already the foundation employers assume. The gap between you and the role is the AI layer, in this order: **RAG → agents → evals → MCP**.
 
-The profile you're building — the one the 2026 market pays a premium for — is **"can turn an LLM demo into a deployed, tested, secured system."** Not "watched agent tutorials." Everything below serves that one sentence.
+## 🗓️ The schedule (~12 hrs/week, 13 weeks)
 
-## Rules that keep you on track
+**The gate is "done."** A week isn't finished when you've read it — it's finished when the section's test task passes.
 
-1. **One capstone repo from Week 1.** Every phase *adds* to it. You never start fresh. By Week 12 it's a real deployed system, not a folder of tutorials.
-2. **Ship > perfect.** A deployed ugly thing beats a beautiful local thing. Recruiters open the URL, not your feelings about the code.
-3. **Public GitHub from day 1. Commit daily.** The commit history is proof of the grind.
-4. **The gate is "done," not "I read it."** Tick a box only when you've passed the section's test task.
-5. **Apply from Week 9.** In parallel with finishing. This is non-negotiable.
+### Phase 1 — RAG (Weeks 1–4) · the #1 keyword
+- [ ] W1 [LangChain foundations](langchain_rag/01_foundations/README.md) + [LangChain core](langchain_rag/02_langchain_core/README.md)
+- [ ] W2 [RAG fundamentals](langchain_rag/03_rag_fundamentals/README.md)
+- [ ] W3 [Advanced RAG](langchain_rag/04_advanced_rag/README.md) + [Tool calling & agents](langchain_rag/05_tool_calling_and_agents/README.md)
+- [ ] W4 🏁 [Document assistant project](langchain_rag/99_project_doc_assistant/README.md) — **serve it behind FastAPI** (your existing skill, now with an AI layer) → **portfolio piece #1**
 
----
+### Phase 2 — Agents (Weeks 5–8) · the production framework
+- [ ] W5 [LangGraph foundations](langgraph/01_foundations/README.md) + [Execution model](langgraph/02_execution_model/README.md)
+- [ ] W6 [Building graphs](langgraph/03_building_graphs/README.md) + [Control flow](langgraph/04_control_flow/README.md)
+- [ ] W7 [Persistence & memory](langgraph/05_persistence_and_memory/README.md) + [Human-in-the-loop](langgraph/06_human_in_the_loop/README.md)
+- [ ] W8 [Multi-agent](langgraph/07_multi_agent/README.md) + [Pitfalls & production](langgraph/09_pitfalls_and_production/README.md), then 🏁 [Research assistant capstone](langgraph/99_project_research_assistant/README.md) → **portfolio piece #2**
 
-## What's IN (≈29 sections) and what's OUT
+### Phase 3 — Evals (Weeks 9–10) · the interview differentiator
+- [ ] W9 [Foundations](llm_evals_observability/01_foundations/README.md) + [Datasets](llm_evals_observability/02_datasets/README.md) + [Metrics](llm_evals_observability/03_metrics/README.md)
+- [ ] W10 [LLM-as-judge](llm_evals_observability/04_llm_as_judge/README.md) + [RAG evaluation](llm_evals_observability/05_rag_evaluation/README.md) + [CI regression gates](llm_evals_observability/07_ci_regression/README.md) — **wire an eval CI gate into the Phase 1 doc assistant** → **portfolio piece #3**
+- 📣 **Start applying now** (see timeline below). Don't wait for Phase 4.
 
-**IN — the critical path:**
-- Backend spine (the parts you don't already have): DB + migrations, clean architecture, auth, Redis, testing, Docker/CI
-- RAG (the LLM-app base)
-- LangGraph (stateful agents — the framework that matters)
-- **Build MCP Servers** (your scarcest differentiator; builds on your FastAPI)
-- LLM Evals (the interview differentiator almost nobody has)
+### Phase 4 — MCP (Weeks 11–12) · the scarce skill
+- [ ] W11 [Foundations](mcp_servers/01_foundations/README.md) + [First server with FastMCP](mcp_servers/02_first_server_fastmcp/README.md) + [Tools over real systems](mcp_servers/04_real_backends/README.md)
+- [ ] W12 [Remote & auth](mcp_servers/05_remote_and_auth/README.md) + [Security](mcp_servers/06_security/README.md) + [Test, ship & consume](mcp_servers/07_test_ship_consume/README.md), then 🏁 [notevault capstone](mcp_servers/99_capstone_notevault.md) (trim to: deployed + one agent consuming it) → **portfolio piece #4**
 
-**OUT — deliberately skipped (do post-hire, not now):**
-- `python_complete`, FastAPI fundamentals (you have these)
-- `google_adk` (LangGraph already covers agents; ADK is a nice-to-have later)
-- LangGraph 08–10 (real-world/pitfalls/platform — skim after you're hired)
-- Evals: datasets-deep / guardrails (fold the essentials in)
-- Kubernetes, OpenTofu, AWS, Security track, Data track, Media (none serve *this* 90-day goal)
+### Week 13 — Buffer & polish
+- [ ] Catch up on any slipped gate (something *will* slip — this week is why the plan survives)
+- [ ] READMEs on all 4 portfolio repos: what it does, one diagram, honest "what I'd do next"
+- [ ] CV + LinkedIn with the exact keywords: *LangChain, RAG, LangGraph, agents, LLM evals, LLM-as-judge, MCP, FastAPI, vector databases, reranking*
+- [ ] Drill the [interview question bank](INTERVIEW_QUESTIONS.md)
 
-If a specific job posting demands one of the OUT items, pull just that section in. Otherwise, stay on the path.
+## 📆 Application timeline (work backwards from January)
 
----
+Hiring cycles run 4–8 weeks. A January start means:
 
-## Phase 1 · A backend you can deploy (Weeks 1–3)
+| When | Do |
+|------|----|
+| **Early Nov** (start of W10) | First applications out — 3 portfolio pieces is enough to apply. Log everything in the [Job Tracker](JOB_TRACKER.md). |
+| **Nov–Dec** | Interviews while finishing Phase 4. MCP talking points land mid-interview-loop — that's fine, it reads as "currently shipping". |
+| **Dec** | Offers, notice period. |
+| **Jan 2027** | Switch. |
 
-**Goal:** a tested, containerized, authenticated FastAPI service — the substrate every agent runs inside. You know the basics, so we go straight to production depth.
+## ✂️ What's deliberately cut (don't reopen these until hired)
 
-- **Week 1** — [FastAPI 05 · Async DB (SQLAlchemy + Alembic)](fastapi_complete/05_async_database_sqlalchemy_alembic/README.md) + [06 · Clean architecture](fastapi_complete/06_clean_architecture/README.md)
-  - [ ] Passed both gates · **Deliverable:** layered app on real Postgres with migrations
-- **Week 2** — [FastAPI 07 · Security & auth](fastapi_complete/07_security_auth/README.md) + [09 · Testing](fastapi_complete/09_testing/README.md)
-  - [ ] Passed both gates · **Deliverable:** JWT auth + a green test suite
-- **Week 3** — [FastAPI 08 · Redis (cache/limits/jobs + pub/sub)](fastapi_complete/08_redis_caching_jobs/README.md) + [11 · Docker & CI/CD](fastapi_complete/11_production_docker_cicd/README.md)
-  - [ ] Passed both gates, **including [08-4 · Pub/sub](fastapi_complete/08_redis_caching_jobs/04_pubsub_realtime.md)** *(pull this earlier if your interview is before Week 3)* · **Deliverable:** dockerized service, green CI pipeline
-  - *(Skim [10 · Observability](fastapi_complete/10_robustness_observability/README.md) — steal just the request-ID logging.)*
+- **Python & FastAPI courses** — you already have these skills; the doc assistant *is* your FastAPI proof.
+- **Google ADK** — LangChain/LangGraph own the hiring volume; ADK is a post-hire specialization.
+- **Docker/K8s/CI-CD/AWS/OpenTofu tracks** — you need `docker compose up` and one GitHub Actions workflow, and the eval-CI section (W10) teaches exactly that slice.
+- **Security, Snowflake, data, media tracks** — zero overlap with the GenAI screening checklist.
 
-**✅ Phase 1 checkpoint:** you can ship a tested, containerized, authenticated API from a clean clone.
-
----
-
-## Phase 2 · RAG + the LLM-app base (Weeks 4–6)
-
-**Goal:** "chat with your data" running behind *your own* API.
-
-- **Week 4** — [LangChain & RAG 01 · Foundations](langchain_rag/01_foundations/README.md) + [02 · LangChain core](langchain_rag/02_langchain_core/README.md)
-  - [ ] Done
-- **Week 5** — [RAG 03 · RAG fundamentals](langchain_rag/03_rag_fundamentals/README.md) + [04 · Advanced RAG](langchain_rag/04_advanced_rag/README.md)
-  - [ ] Done · **Deliverable:** a retrieval pipeline over real documents
-- **Week 6** — [RAG 05 · Tool calling & agents](langchain_rag/05_tool_calling_and_agents/README.md) + [LLM Evals 01 · Foundations](llm_evals_observability/01_foundations/README.md)
-  - [ ] Done · **Deliverable:** RAG wrapped in your FastAPI backend, one endpoint
-
-**✅ Phase 2 checkpoint:** a grounded "chat with your docs" service you can demo behind your own auth.
-
----
-
-## Phase 3 · Agents + MCP — the scarce stuff (Weeks 7–9)
-
-**Goal:** a stateful multi-agent graph, and your **own MCP server** exposing real tools. This is the differentiator phase — go slow, go deep.
-
-- **Week 7** — [LangGraph 01 · Foundations](langgraph/01_foundations/README.md) + [02 · Execution model](langgraph/02_execution_model/README.md) + [03 · Building graphs](langgraph/03_building_graphs/README.md)
-  - [ ] Done
-- **Week 8** — [LangGraph 04 · Control flow](langgraph/04_control_flow/README.md) + [05 · Persistence & memory](langgraph/05_persistence_and_memory/README.md) + [07 · Multi-agent](langgraph/07_multi_agent/README.md)
-  - [ ] Done · **Deliverable:** a multi-agent graph with memory · *(skim [06 · HITL](langgraph/06_human_in_the_loop/README.md))*
-- **Week 9** — [MCP 01–04](mcp_servers/README.md): [Foundations](mcp_servers/01_foundations/README.md) · [First server](mcp_servers/02_first_server_fastmcp/README.md) · [Resources & prompts](mcp_servers/03_resources_and_prompts/README.md) · [Real backends](mcp_servers/04_real_backends/README.md)
-  - [ ] Passed gates · **Deliverable:** an MCP server exposing your backend as tools
-  - [ ] **▶ Start applying to jobs this week.** Portfolio is demo-able now.
-
-**✅ Phase 3 checkpoint:** a stateful agent + a real MCP server you built. This is already a stronger portfolio than most applicants.
-
----
-
-## Phase 4 · Ship it + prove it (Weeks 10–12)
-
-**Goal:** deploy the whole thing, put an eval gate on it, write it up. Keep applying.
-
-- **Week 10** — [MCP 05 · Remote & auth](mcp_servers/05_remote_and_auth/README.md) + [06 · Security](mcp_servers/06_security/README.md) + [07 · Test/ship/consume](mcp_servers/07_test_ship_consume/README.md)
-  - [ ] Passed gates · **Deliverable:** deployed, authenticated MCP server consumed by your LangGraph agent
-- **Week 11** — [Evals 03 · Metrics](llm_evals_observability/03_metrics/README.md) + [04 · LLM-as-judge](llm_evals_observability/04_llm_as_judge/README.md) + [06 · Tracing](llm_evals_observability/06_tracing_observability/README.md) + [07 · CI regression](llm_evals_observability/07_ci_regression/README.md)
-  - [ ] Done · **Deliverable:** an eval suite gating your agent in CI
-- **Week 12** — Capstone polish, deploy, write-up
-  - [ ] README + architecture diagram + **eval report** ("failure rate before/after my guardrails")
-  - [ ] Deployed and reachable by a public URL
-  - [ ] CV + LinkedIn updated with the repo link
-
-**✅ Phase 4 checkpoint:** a deployed, evaluated, documented GenAI system — and a live job search.
-
----
-
-## The capstone (built across all 12 weeks, not just Week 12)
-
-**Concrete spec → [PROJECT · "askme" portfolio assistant](PROJECT_portfolio_assistant.md).** A grounded conversational assistant over a **deep knowledge base of how you executed each project**, plus personal Q&A — cited, evaluated so it won't fabricate facts about you, injection-resistant, cost-capped, streaming, deployed. It fuses RAG + agent/tools + evals + guardrails + production FastAPI, **is about you**, and ships as a live URL recruiters can talk to. Writing the project deep-dives doubles as your STAR interview prep.
-
-It doesn't need to be big. It needs to be **real, deployed, and explainable**. In interviews you'll tell its failure stories: the stale cache, the agent that looped, the eval that caught a regression before it shipped. That's what "production experience" sounds like — and you'll have actually lived it.
-
-Every phase feeds this one repo:
-- Phase 1 → the backend + auth + Docker/CI
-- Phase 2 → the RAG endpoint
-- Phase 3 → the agent graph + MCP server
-- Phase 4 → deploy + the eval gate + the write-up
-
----
-
-## 🔀 Alternate track: the backend + cloud interview
-
-The role you got invited to leans **backend + cloud** (GCP, Pub/Sub, Gunicorn, Terraform) more than pure GenAI. It shares Phase 1's backend spine, then diverges into cloud/infra. Run this **in parallel** for that interview — most of it you already have in the repo. Do it in this order (quick, high-frequency-asked things first):
-
-- [ ] **Gunicorn** — [FastAPI 11-4](fastapi_complete/11_production_docker_cicd/04_gunicorn_workers.md) (~half a day). WSGI-vs-ASGI, worker sizing, Nginx.
-- [ ] **Pub/Sub** — [FastAPI 08-4](fastapi_complete/08_redis_caching_jobs/04_pubsub_realtime.md) for the pattern, then the **Redis-vs-GCP distinction** in the [cloud cheat sheet](INTERVIEW_CLOUD_CHEATSHEET.md) (~1 day). GCP Pub/Sub is durable/at-least-once → consumers must be idempotent.
-- [ ] **Terraform via OpenTofu** — the [OpenTofu course](opentofu_iac/) (~1 week). It *is* Terraform proficiency; say "OpenTofu, the open-source Terraform fork."
-- [ ] **GCP fundamentals** — learned as "the GCP name for the AWS thing I know" ([cheat sheet](INTERVIEW_CLOUD_CHEATSHEET.md) mapping): Cloud Run, GCS, Pub/Sub, BigQuery, IAM/service accounts (~1 week).
-- [ ] **The proof project** — [linkbox on GCP](PROJECT_linkbox_on_gcp.md): deploy your FastAPI app to Cloud Run with OpenTofu, Pub/Sub → BigQuery, keyless CI. Earns GCP + Terraform + Pub/Sub + Gunicorn on your resume with a live URL.
-
-**Before the call:** rehearse the [cloud cheat sheet](INTERVIEW_CLOUD_CHEATSHEET.md)'s 60-second self-test out loud. Lead every answer with the tradeoff, then the detail.
-
----
-
-## If you fall behind (you will, some weeks)
-
-Protect the differentiators. Cut in this order:
-1. First cut: skim LangGraph persistence/multi-agent to the essentials.
-2. Then: trim evals to metrics + CI-gate only (drop judge/tracing depth).
-3. **Never cut:** the MCP server, one deployed capstone, and the eval *gate*. Those three are the interview-winners. A smaller project that's deployed and evaluated beats a bigger one that's neither.
-
-Track granular progress in the [Learning Tracker](LEARNING_TRACKER.md); this file is your week-by-week battle plan.
-
-*90 days. One repo. Ship it.*
+Feeling behind? Cut LangGraph 09 and the MCP capstone polish. Never cut a gate or a portfolio README — **deployed repos beat completed sections.**

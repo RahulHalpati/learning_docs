@@ -13,11 +13,11 @@ You've already used it. It pulls `.content` out of the `AIMessage` so the chain 
 
 ```python
 from langchain_core.output_parsers import StrOutputParser
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 
-llm = GenericFakeChatModel(messages=iter(["Hello!"]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 chain = llm | StrOutputParser()
-print(repr(chain.invoke("hi")))      # 'Hello!'  (a str, not an AIMessage)
+print(repr(chain.invoke("hi")))      # 'Hello! How can I help you today?'  (a str, not an AIMessage)
 ```
 
 This is the default ending for text-answer chains, including RAG.
@@ -47,21 +47,23 @@ For data with fields, ask the model for JSON and parse it with `JsonOutputParser
 
 ```python
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
 
-# A real model would emit this JSON; the fake model lets us verify the parsing offline.
-fake_json = '{"name": "Ada", "language": "Python", "years": 5}'
-llm = GenericFakeChatModel(messages=iter([fake_json]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+prompt = ChatPromptTemplate.from_template(
+    "Return ONLY a JSON object with keys name, language, years for a fictional developer. {request}"
+)
 
-chain = llm | JsonOutputParser()
-out = chain.invoke("give me a profile")
+chain = prompt | llm | JsonOutputParser()
+out = chain.invoke({"request": "give me a profile"})
 print("parsed:", out, "| type:", type(out).__name__, "| years+1:", out["years"] + 1)
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 
 ```text
-parsed: {'name': 'Ada', 'language': 'Python', 'years': 5} | type: dict | years+1: 6
+parsed: {'name': 'Ada Lin', 'language': 'Python', 'years': 5} | type: dict | years+1: 6
 ```
 
 The reply is now a real Python `dict` you can index and compute with — not a string you'd have to hand-parse.
@@ -112,31 +114,36 @@ This needs a real model with structured-output support, so it's **not run here**
 
 ## Exercises
 
-1. **Parse a list.** Build `llm | CommaSeparatedListOutputParser()` with a fake model returning `"red, green, blue"`. Invoke and confirm you get a 3-element Python list.
+1. **Parse a list.** Build `prompt | llm | CommaSeparatedListOutputParser()` with a prompt asking for exactly three colours, comma-separated. Invoke and confirm you get a 3-element Python list.
 
 <details><summary>Solution</summary>
 
 ```python
 from langchain_core.output_parsers import CommaSeparatedListOutputParser
-from langchain_core.language_models import GenericFakeChatModel
-llm = GenericFakeChatModel(messages=iter(["red, green, blue"]))
-chain = llm | CommaSeparatedListOutputParser()
-print(chain.invoke("name 3 colors"))   # ['red', 'green', 'blue']
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+prompt = ChatPromptTemplate.from_template("Name 3 colours as a comma-separated list, nothing else.")
+chain = prompt | llm | CommaSeparatedListOutputParser()
+print(chain.invoke({}))   # e.g. ['red', 'green', 'blue']
 ```
 
 The chain output is a `list`, ready to iterate — no manual `.split(",")`.
 </details>
 
-2. **JSON to computation.** Using `JsonOutputParser` and a fake model returning `'{"items": 3, "price": 10}'`, build a chain and compute `items * price` from the result.
+2. **JSON to computation.** Using `JsonOutputParser` and a prompt that asks for a JSON object with integer `items` and `price` keys, build a chain and compute `items * price` from the result.
 
 <details><summary>Solution</summary>
 
 ```python
 from langchain_core.output_parsers import JsonOutputParser
-from langchain_core.language_models import GenericFakeChatModel
-llm = GenericFakeChatModel(messages=iter(['{"items": 3, "price": 10}']))
-out = (llm | JsonOutputParser()).invoke("order")
-print(out["items"] * out["price"])   # 30
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+prompt = ChatPromptTemplate.from_template(
+    "Return ONLY a JSON object with integer keys items and price for a small order.")
+out = (prompt | llm | JsonOutputParser()).invoke({})
+print(out["items"] * out["price"])   # e.g. 30
 ```
 
 Because the parser returns a real `dict`, you index fields and do arithmetic directly — the payoff of structured output over a raw string.

@@ -1,15 +1,14 @@
 # Section 99 · The complete document assistant
 
 > **Prerequisites:** Sections 01–04.
-> **Time:** ~4–6 hours · **Verified:** 2026-07-05 — runs against the live local LLM, 7/7 tests pass offline.
+> **Time:** ~4–6 hours · **Verified:** 2026-07-05 — runs against the live LLM; 5 offline tests pass, 2 live-LLM tests run when `OPENAI_API_KEY` is set.
 
 This folder is the **finished RAG app** — every concept from Sections 01–04 assembled into one small, runnable "chat with your documents" assistant (~230 lines of code) that answers grounded questions *and cites its sources*. Read it as the reference implementation, run it against the included sample docs, and then extend it.
 
-It runs three ways, so it works for everyone:
+It runs two ways:
 
-- **Real answers, local, no key** — with [Ollama](https://ollama.com) (recommended).
-- **Real answers, hosted** — with an OpenAI-compatible endpoint (a key).
-- **Fully offline, zero setup** — falls back to a fake model so the pipeline still runs.
+- **OpenAI (default)** — set `OPENAI_API_KEY`. Any OpenAI-compatible endpoint (e.g. NVIDIA's) works too via `OPENAI_BASE_URL`.
+- **Local, no key** — with [Ollama](https://ollama.com): `DOC_ASSISTANT_LLM=ollama`.
 
 ## Layout
 
@@ -21,7 +20,7 @@ It runs three ways, so it works for everyone:
 │   ├── shipping.md
 │   └── company.md
 ├── rag_app/
-│   ├── llm.py                # choose embeddings + chat model (real or fake)   §01, §03
+│   ├── llm.py                # choose embeddings + chat model (OpenAI or Ollama)   §01, §03
 │   ├── ingest.py             # load → split → embed → InMemoryVectorStore      §03.03
 │   ├── rag.py                # the LCEL RAG chain                              §03.04
 │   └── cli.py                # ask questions from the command line
@@ -33,18 +32,18 @@ Each file maps to something you built:
 
 | File | What it is | Section |
 |------|-----------|---------|
-| `llm.py` | `get_embeddings()` / `get_chat_model()` with graceful fallback to fakes | [01.02](../01_foundations/02_environment_setup.md), [03.01](../03_rag_fundamentals/01_embeddings.md) |
+| `llm.py` | `get_embeddings()` / `get_chat_model()`, chosen by env vars | [01.02](../01_foundations/02_environment_setup.md), [03.01](../03_rag_fundamentals/01_embeddings.md) |
 | `ingest.py` | loaders + splitter + vector store (in-memory, or on-disk FAISS via `build_or_load_faiss`) | [03.03](../03_rag_fundamentals/03_loaders_and_splitters.md) |
 | `rag.py` | `{context, question} \| prompt \| llm \| parser`, plus a sources-aware chain that cites files | [03.04](../03_rag_fundamentals/04_build_a_rag_chain.md) |
 | `cli.py` | wires it together, runs questions | — |
-| `tests/` | fake embeddings + fake model, deterministic | [04.03](../04_advanced_rag/03_evaluating_rag.md) |
+| `tests/` | offline tests (fake embeddings) + live RAG tests when `OPENAI_API_KEY` is set | [04.03](../04_advanced_rag/03_evaluating_rag.md) |
 
 ## Run it
 
 ```bash
 cd 99_project_doc_assistant
-python -m venv .venv && source .venv/bin/activate
-pip install -r requirements.txt
+uv venv && source .venv/bin/activate
+uv pip install -r requirements.txt
 ```
 
 **Real answers (recommended)** — make sure Ollama is running with a model pulled (`ollama pull qwen2:7b`), then:
@@ -84,26 +83,17 @@ Three grounded answers from the docs, and an honest "I don't know" for the quest
 python -m rag_app.cli "Do you ship internationally?"
 ```
 
-**Fully offline (no LLM, no model download):**
+**Use a local model instead of OpenAI:**
 
 ```bash
-DOC_ASSISTANT_FAKE_EMBEDDINGS=1 DOC_ASSISTANT_LLM=fake python -m rag_app.cli "How long are returns?"
+uv pip install langchain-ollama && ollama pull qwen2:7b
+DOC_ASSISTANT_LLM=ollama python -m rag_app.cli "How long are returns?"
 ```
-
-**Verified output:**
-
-```text
-Q: How long are returns?
-A: [fake LLM] Set DOC_ASSISTANT_LLM=ollama (or openai) for a real answer.
-Sources: refunds.md, shipping.md, company.md
-```
-
-This proves the *pipeline* runs end-to-end with zero setup — the same code, just fake components.
 
 **Persist the index to disk (embed once, reuse):** by default the app rebuilds the index in memory every run. Set `DOC_ASSISTANT_INDEX_DIR` to save a FAISS index to disk instead — the first run builds and saves it, later runs just load it:
 
 ```bash
-pip install faiss-cpu
+uv pip install faiss-cpu
 DOC_ASSISTANT_INDEX_DIR=./index python -m rag_app.cli "How long are returns?"   # run 1: builds ./index/
 DOC_ASSISTANT_INDEX_DIR=./index python -m rag_app.cli "Is shipping free?"        # run 2: loads ./index/
 ```
@@ -121,11 +111,11 @@ pytest -q
 **Verified output:**
 
 ```text
-.......                                                                  [100%]
-7 passed in 4.14s
+....s.s                                                                  [100%]
+5 passed, 2 skipped in 1.51s
 ```
 
-The tests use a **fake embedding model and a fake chat model**, so they run offline, instantly, and deterministically — yet exercise the real ingestion and RAG-chain code (loading, splitting, retrieval shape, the full chain wiring, and source citations).
+The five ingestion/retrieval tests use a **fake embedding model**, so they run offline, instantly, and deterministically. The two end-to-end RAG tests call the real chat model and are **skipped unless `OPENAI_API_KEY` is set** — with it, `pytest -q` runs all seven.
 
 ## How it works, end to end
 
@@ -140,7 +130,7 @@ flowchart TD
       R --> CTX[relevant chunks]
       CTX --> P[prompt: answer from context only]
       Q --> P
-      P --> M[chat model<br/>llm.py picks real or fake] --> A[grounded answer]
+      P --> M[chat model<br/>llm.py picks OpenAI or Ollama] --> A[grounded answer]
     end
 ```
 
@@ -173,7 +163,7 @@ You've finished the course if you can:
 - ☑ Explain every box in the diagram above and point to the file that implements it.
 - ☑ Add a new document to `data/`, re-run, and get answers from it.
 - ☑ Change the prompt and predict how answers change.
-- ☑ Swap the LLM (fake ↔ Ollama ↔ hosted) without touching `ingest.py` or `rag.py`.
+- ☑ Swap the LLM (OpenAI ↔ Ollama ↔ NVIDIA) without touching `ingest.py` or `rag.py`.
 - ☑ Implement at least one extension above.
 
 ## Exercises
@@ -192,9 +182,9 @@ You've finished the course if you can:
 Without the grounding instruction, the model is more likely to *guess* a CEO/salary from its training knowledge instead of admitting ignorance. This shows grounding is enforced by the **prompt**, not by RAG magic — retrieval supplies the context, but the instruction is what makes the model stick to it and refuse otherwise. Put the line back.
 </details>
 
-3. **Swap the LLM with zero pipeline changes.** Run the app with `DOC_ASSISTANT_LLM=fake`, then with Ollama. Which files did you edit to switch? Why is that possible?
+3. **Swap the LLM with zero pipeline changes.** Run the app with the default OpenAI model, then with `DOC_ASSISTANT_LLM=ollama`. Which files did you edit to switch? Why is that possible?
 
 <details><summary>Solution</summary>
 
-You edited **no** pipeline files — only an environment variable, which `llm.py`'s `get_chat_model()` reads. `ingest.py` and `rag.py` accept whatever chat model they're given, because every LangChain chat model shares the same interface (Section 01.03). That swappability — the whole reason to use LangChain's abstractions — lets you develop offline with the fake model and flip to a real one for production without touching your RAG logic.
+You edited **no** pipeline files — only an environment variable, which `llm.py`'s `get_chat_model()` reads. `ingest.py` and `rag.py` accept whatever chat model they're given, because every LangChain chat model shares the same interface (Section 01.03). That swappability — the whole reason to use LangChain's abstractions — lets you develop against a cheap model and flip providers for production without touching your RAG logic.
 </details>

@@ -80,7 +80,7 @@ For RAG specifically, the key questions about an answer are:
 [RAGAS](https://docs.ragas.io) is a library that automates those metrics using an LLM as judge. You give it questions, generated answers, and retrieved contexts; it scores **faithfulness**, **answer relevancy**, and **context precision/recall**:
 
 ```python
-# Optional, heavier dependency — needs `pip install ragas` and an LLM for judging.
+# Optional, heavier dependency — needs `uv pip install ragas` and an LLM for judging.
 # from ragas import evaluate
 # from ragas.metrics import faithfulness, answer_relevancy, context_precision
 # result = evaluate(dataset, metrics=[faithfulness, answer_relevancy, context_precision])

@@ -86,11 +86,11 @@ Each section adds one layer to the same mental model, until the picture from the
 - **LangChain 1.x** — the current major version. We use the modern **LCEL** style; older `LLMChain`/`RetrievalQA` tutorials won't run on 1.x.
 - **A local embedding model** (`all-MiniLM-L6-v2` via `langchain-huggingface`) — turns text into meaning-vectors **on your machine, no API key**, so retrieval is real and free.
 - **`InMemoryVectorStore`** — a vector store built into `langchain-core`; zero setup, perfect for learning. (We'll note how to swap in FAISS or Chroma later.)
-- **An LLM you choose:** a **local model via [Ollama](https://ollama.com)** (no key), a **hosted endpoint** (an OpenAI-compatible/NVIDIA endpoint, or **Anthropic Claude**), or a **built-in fake model** for running things with literally no setup. All are wired up in Section 01, along with how to *choose* between them.
+- **An LLM:** **OpenAI's `gpt-4o-mini` via `langchain-openai`** is the course default (needs an `OPENAI_API_KEY`; the whole course costs cents). Alternatives — a **local model via [Ollama](https://ollama.com)** (no key), **NVIDIA's free endpoint**, or **Anthropic Claude** — are wired up in Section 01, along with how to *choose* between them.
 
 ## A note on how this course verifies code
 
-Every code sample that doesn't need a live LLM was **actually run** in the verified environment, and you'll see its real output. Examples that call a live LLM are clearly labelled, and because LLM output varies between models and runs, we show a representative real answer (captured from the local model) — never a fabricated one. You can reproduce everything offline.
+Every code sample that doesn't call an LLM was **actually run** in the verified environment, and you'll see its real output. Because LLM output varies between models and runs, samples that call one show a clearly labelled *representative* answer — the wording you get will differ, the behaviour won't.
 
 ## Recap & next
 

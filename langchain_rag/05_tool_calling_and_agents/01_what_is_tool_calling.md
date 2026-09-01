@@ -7,7 +7,7 @@
 
 An LLM is brilliant at language but helpless at a lot of simple things: it can't reliably do arithmetic, it doesn't know today's weather, and it can't look anything up — it only has its frozen training memory. **Tool calling** fixes this by giving the model *hands*: you describe some functions ("tools"), and the model can ask to **run one** and use the result. This is the foundation of every "agent," and — crucially for us — it's how we'll turn **document retrieval into something the model decides to do**, instead of a fixed step (Module 03).
 
-> ⚠️ **Needs a tool-capable model.** Every example here uses local **`qwen2:7b`** via Ollama. The fake model can't call tools; small models do it unreliably. See the section [README](README.md).
+> ⚠️ **Needs a tool-capable model.** Every example here uses local **`qwen2:7b`** via Ollama. Small models do it unreliably. See the section [README](README.md).
 
 ## The key idea: the model *requests*, your code *runs*
 

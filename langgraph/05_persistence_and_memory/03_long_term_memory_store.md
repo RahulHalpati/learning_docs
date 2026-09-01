@@ -81,7 +81,7 @@ print([(h.key, round(h.score, 3), h.value["text"]) for h in hits])
 
 The coffee memory ranks top for a coffee query. In production, swap the toy `embed` for a real embedding model (e.g. an embeddings client) and `PostgresStore` with a vector index.
 
-> **Tip:** `InMemoryStore` falls back to pure-Python vector math and warns if NumPy is missing — fine for learning; `pip install numpy` for speed. `index={"fields": [...]}` chooses which document fields get embedded.
+> **Tip:** `InMemoryStore` falls back to pure-Python vector math and warns if NumPy is missing — fine for learning; `uv pip install numpy` for speed. `index={"fields": [...]}` chooses which document fields get embedded.
 
 ---
 

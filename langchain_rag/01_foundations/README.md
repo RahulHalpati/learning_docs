@@ -3,7 +3,7 @@
 > **Prerequisites:** [00 · Introduction](../00_introduction.md). Comfortable with Python.
 > **Time:** ~3–4 hours.
 
-Before any RAG, you need three things: a clear mental model of **what LangChain and RAG actually are**, a **working environment**, and the ability to **make an LLM say something** from Python. This section delivers all three. By the end you'll have LangChain installed, an LLM you can call (local, hosted, or a zero-setup fake), and a feel for the chat-model interface every later section builds on.
+Before any RAG, you need three things: a clear mental model of **what LangChain and RAG actually are**, a **working environment**, and the ability to **make an LLM say something** from Python. This section delivers all three. By the end you'll have LangChain installed, an LLM you can call (OpenAI by default, or local/other hosted), and a feel for the chat-model interface every later section builds on.
 
 ## Modules
 
@@ -17,6 +17,6 @@ Before any RAG, you need three things: a clear mental model of **what LangChain 
 
 - Explain RAG and LangChain to a colleague, and draw the RAG pipeline.
 - Set up a virtual environment with LangChain 1.x and a local embedding model.
-- Pick and configure an LLM provider (Ollama, hosted, or fake) and make your first `.invoke()` and `.stream()` calls.
+- Pick and configure an LLM provider (OpenAI, Ollama, NVIDIA, or Claude) and make your first `.invoke()` and `.stream()` calls.
 
 → Start: **[01 · What LangChain & RAG are](01_what_is_langchain_and_rag.md)**

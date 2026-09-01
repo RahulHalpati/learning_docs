@@ -46,7 +46,7 @@ flowchart TD
     CORE["langchain-core<br/>the base interfaces: messages, prompts,<br/>runnables, embeddings, vector stores"]
     CORE --> LC["langchain<br/>higher-level helpers & chains"]
     CORE --> COMM["langchain-community<br/>integrations: loaders, extra stores"]
-    CORE --> PROV["provider packages<br/>langchain-openai, langchain-ollama,<br/>langchain-huggingface"]
+    CORE --> PROV["provider packages<br/>langchain-openai, langchain-ollama,<br/>langchain-nvidia-ai-endpoints, langchain-huggingface"]
     CORE --> TS["langchain-text-splitters<br/>chunking"]
 ```
 

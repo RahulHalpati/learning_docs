@@ -110,14 +110,14 @@ The model pulled the URL from the question, called the tool, and summarized live
 
 | Tool | Import | Note |
 |------|--------|------|
-| **Tavily search** (recommended) | `from langchain_tavily import TavilySearch` | web search built for LLMs; ranked results + snippets. `pip install langchain-tavily`, set `TAVILY_API_KEY` (free tier available) |
-| **DuckDuckGo search** | `from langchain_community.tools import DuckDuckGoSearchRun` | no API key; `pip install duckduckgo-search`. Handy for demos; can rate-limit |
+| **Tavily search** (recommended) | `from langchain_tavily import TavilySearch` | web search built for LLMs; ranked results + snippets. `uv pip install langchain-tavily`, set `TAVILY_API_KEY` (free tier available) |
+| **DuckDuckGo search** | `from langchain_community.tools import DuckDuckGoSearchRun` | no API key; `uv pip install duckduckgo-search`. Handy for demos; can rate-limit |
 | **Requests toolkit** | `from langchain_community.agent_toolkits.openapi.toolkit import RequestsToolkit` | let the model make HTTP GET/POST calls to an API |
 
 Using Tavily is a two-liner — it binds and gets called **exactly like** any tool you wrote:
 
 ```python
-from langchain_tavily import TavilySearch      # pip install langchain-tavily
+from langchain_tavily import TavilySearch      # uv pip install langchain-tavily
 
 search = TavilySearch(max_results=3)            # needs TAVILY_API_KEY
 llm_with_tools = llm.bind_tools([search])       # same bind_tools as your own tools

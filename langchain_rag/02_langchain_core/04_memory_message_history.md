@@ -39,9 +39,9 @@ prompt = ChatPromptTemplate.from_messages([
 ```python
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 
-llm = GenericFakeChatModel(messages=iter(["Nice to meet you, Sam!", "Your name is Sam."]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 chain = prompt | llm
 
 store = {}
@@ -66,10 +66,10 @@ print("turn 2:", with_history.invoke({"input": "What's my name?"}, config=config
 print("stored messages:", len(store["demo"].messages))
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 
 ```text
-turn 1: Nice to meet you, Sam!
+turn 1: Nice to meet you, Sam! How can I help you today?
 turn 2: Your name is Sam.
 stored messages: 4
 ```
@@ -103,7 +103,7 @@ The `session_id` is why two users (or two chats) don't bleed together: each id m
 
 ## Exercises
 
-1. **Two sessions don't mix.** Using the setup above (give the fake model enough scripted replies), run a turn under `session_id="a"` and another under `session_id="b"`, then check that `store["a"]` and `store["b"]` have separate messages.
+1. **Two sessions don't mix.** Using the setup above, run a turn under `session_id="a"` and another under `session_id="b"`, then check that `store["a"]` and `store["b"]` have separate messages.
 
 <details><summary>Solution</summary>
 

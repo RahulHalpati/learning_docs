@@ -1,58 +1,60 @@
-# 01-3 · Environment setup (offline, no API key)
+# 01-3 · Environment setup
 
 > **Level:** Beginner · **Prerequisites:** [01-1 · Core concepts](01_core_concepts.md)
 > **Time:** 20 min · **Verified:** 2026-07-21 (langgraph 1.2.9, langchain-core 1.5.0, langchain-ollama 1.1.0, Python 3.10)
 
 ## Why this matters
 
-Every sample in this course is **verified** — actually run, with real output shown. For that to be reproducible *for you*, we pin versions and default to a model that needs no key and no network. This lesson sets up that environment and gives you one helper you'll reuse everywhere: `get_model()`.
+Every graph in this course was actually run. For that to be reproducible *for you*, we pin versions and standardise on one cheap chat model (`gpt-4o-mini`) with a free local fallback. This lesson sets up that environment and gives you one helper you'll reuse everywhere: `get_model()`.
 
 ---
 
 ## Pinned versions
 
+Uses [uv](../../UV_GUIDE.md) as a drop-in for `venv` + `pip` (`curl -LsSf https://astral.sh/uv/install.sh | sh` if you don't have it).
+
 ```bash
-python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
-pip install \
+uv venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+uv pip install \
   "langgraph==1.2.9" \
   "langchain-core==1.5.0" \
-  "langgraph-checkpoint-sqlite==3.1.0"   # SqliteSaver, used in Section 05
+  "langgraph-checkpoint-sqlite==3.1.0" \
+  langchain-openai                        # checkpoint-sqlite = SqliteSaver, Section 05
+export OPENAI_API_KEY=sk-...              # from platform.openai.com
 ```
 
 Check what you actually have if an import ever looks different:
 
 ```bash
-pip show langgraph | grep -i version
+uv pip show langgraph | grep -i version
 ```
 
 ---
 
-## Three ways to get a model
+## Two ways to get a model
 
-This course uses three interchangeable chat models, in increasing order of realism:
+This course uses two interchangeable chat models:
 
-| Model | Needs | Deterministic? | Use when |
-|-------|-------|:---:|----------|
-| `FakeListChatModel` | nothing | ✅ yes | learning wiring, tests, CI — **the default** |
-| `ChatOllama` (local) | Ollama + a pulled model | ⚠️ mostly | you want real generation, still offline |
-| real API (OpenAI/…) | an API key | ❌ no | production |
+| Model | Needs | Cost | Use when |
+|-------|-------|------|----------|
+| `ChatOpenAI` (`gpt-4o-mini`) | `OPENAI_API_KEY` | cents for the whole course | **the default** — every lesson |
+| `ChatOllama` (local) | Ollama + a pulled model | free (your CPU/GPU) | offline, private, no bills |
 
-### The fake model (default)
+### OpenAI (default)
 
 ```python
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-llm = FakeListChatModel(responses=["first reply", "second reply"])
-print(llm.invoke("anything").content)   # → "first reply"
-print(llm.invoke("anything").content)   # → "second reply"
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)   # reads OPENAI_API_KEY
+print(llm.invoke("Reply with exactly: pong").content)   # → "pong"
 ```
 
-It returns your canned `responses` in order — so the *graph*, not the LLM, is what varies. That's exactly what you want while learning orchestration.
+`temperature=0` keeps replies as stable as an LLM gets — so the *graph*, not the model's mood, is what you're watching while you learn orchestration.
 
-### The local model (optional, real generation)
+### The local model (optional, free & offline)
 
 ```bash
-pip install langchain-ollama
+uv pip install langchain-ollama
 ollama pull qwen2.5:0.5b     # ~400 MB, runs on CPU
 ```
 
@@ -68,40 +70,39 @@ print(llm.invoke("Reply with exactly: pong").content)
 Pong!
 ```
 
-> **Tip:** For agents that call **tools**, use a model that supports tool-calling. `qwen2.5` does; very small models sometimes don't. When in doubt, the fake model lets you script exact tool calls (shown in [03-2](../03_building_graphs/02_tools_and_react.md)).
+> **Tip:** For agents that call **tools**, use a model that supports tool-calling. `qwen2.5` does; very small models sometimes don't. `gpt-4o-mini` is reliable at it — one reason it's the default.
 
 ---
 
 ## One helper to rule them all: `get_model()`
 
-Drop this in a `providers.py` and import it in every example. It picks the model from an env var so you can flip the whole course between fake and local with one setting:
+Drop this in a `providers.py` and import it in every example. It picks the model from an env var so you can flip the whole course between OpenAI and a local model with one setting:
 
 ```python
 # providers.py
 import os
 
-def get_model(responses=None, temperature=0):
+def get_model(temperature=0):
     """Return a chat model chosen by the LANGGRAPH_LLM env var.
 
-    LANGGRAPH_LLM=fake   (default) → offline, deterministic FakeListChatModel
+    LANGGRAPH_LLM=openai (default) → ChatOpenAI gpt-4o-mini (needs OPENAI_API_KEY)
     LANGGRAPH_LLM=ollama           → local ChatOllama (qwen2.5:0.5b)
     """
-    backend = os.getenv("LANGGRAPH_LLM", "fake")
-    if backend == "ollama":
+    if os.getenv("LANGGRAPH_LLM", "openai") == "ollama":
         from langchain_ollama import ChatOllama
         return ChatOllama(model=os.getenv("OLLAMA_MODEL", "qwen2.5:0.5b"),
                           temperature=temperature)
-    from langchain_core.language_models.fake_chat_models import FakeListChatModel
-    return FakeListChatModel(responses=responses or ["(fake response)"])
+    from langchain_openai import ChatOpenAI
+    return ChatOpenAI(model=os.getenv("OPENAI_MODEL", "gpt-4o-mini"), temperature=temperature)
 ```
 
 ```python
 from providers import get_model
-llm = get_model(responses=["Paris"])
-print(llm.invoke("Capital of France?").content)
+llm = get_model()
+print(llm.invoke("Capital of France? One word.").content)
 ```
 
-**Output (real run, `LANGGRAPH_LLM` unset → fake):**
+**Output (representative):**
 ```
 Paris
 ```
@@ -112,23 +113,23 @@ Run the same script with `LANGGRAPH_LLM=ollama python script.py` and it uses you
 
 ## Recap & next
 
-- ✅ Versions are pinned; `pip show langgraph` tells you what you actually have.
-- ✅ Default to `FakeListChatModel` (offline, deterministic); flip to `ChatOllama` for real local generation.
+- ✅ Versions are pinned; `uv pip show langgraph` tells you what you actually have.
+- ✅ Default to `ChatOpenAI` (`gpt-4o-mini`, `temperature=0`); flip to `ChatOllama` for free local generation.
 - ✅ `get_model()` switches backends via `LANGGRAPH_LLM` — reuse it throughout.
-- ✅ Self-check: why does a *deterministic* model make a course "verifiable"?
+- ✅ Self-check: why does `temperature=0` matter while you're learning orchestration?
 
 → Next: **[02 · Execution model](../02_execution_model/README.md)**
 
 ## Exercises
 
-1. Write `providers.py` above, then run one script twice — once with `LANGGRAPH_LLM=fake` and once with `LANGGRAPH_LLM=ollama` (if you have Ollama) — and confirm both produce output.
+1. Write `providers.py` above, then run one script twice — once with the default (OpenAI) and once with `LANGGRAPH_LLM=ollama` (if you have Ollama) — and confirm both produce output.
 
 <details>
 <summary>Solution</summary>
 
 ```bash
-LANGGRAPH_LLM=fake   python script.py    # deterministic canned reply
-LANGGRAPH_LLM=ollama python script.py    # real local generation
+python script.py                         # OpenAI (default)
+LANGGRAPH_LLM=ollama python script.py    # local generation
 ```
 Same graph, different backend — the point of the indirection.
 </details>

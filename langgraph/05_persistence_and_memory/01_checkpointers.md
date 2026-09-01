@@ -46,7 +46,7 @@ State now survives process restarts — reopen the same file, invoke with the sa
 `PostgresSaver` is the production choice; it needs a one-time `.setup()` to create tables:
 
 ```python
-# pip install langgraph-checkpoint-postgres
+# uv pip install langgraph-checkpoint-postgres
 from langgraph.checkpoint.postgres import PostgresSaver
 
 DB = "postgresql://user:pass@localhost:5432/langgraph"

@@ -48,7 +48,7 @@ async for chunk in client.runs.stream(
 
 The same `stream_mode`s from [02-2](../02_execution_model/02_streaming.md) work over the wire. A synchronous version is identical with `get_sync_client` and no `await`.
 
-> **Note:** these calls need a server listening at `url`. With `langgraph dev` running (10-1), the snippet works as-is; without it you'll get a connection error. That's why this lesson shows code shapes rather than captured output — the rest of the course runs offline, but the Server is a service.
+> **Note:** these calls need a server listening at `url`. With `langgraph dev` running (10-1), the snippet works as-is; without it you'll get a connection error. That's why this lesson shows code shapes rather than captured output — the rest of the course runs locally, but the Server is a service.
 
 ---
 

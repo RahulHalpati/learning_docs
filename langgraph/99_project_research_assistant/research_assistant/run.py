@@ -3,7 +3,7 @@
 Usage:
     python -m research_assistant.run "LangGraph persistence"
 
-Runs offline by default (fake model). Set LANGGRAPH_LLM=ollama for a local model.
+Uses OpenAI by default (needs OPENAI_API_KEY). Set LANGGRAPH_LLM=ollama for a local model.
 The graph pauses for approval; this CLI auto-approves and prints the outcome.
 """
 import sys

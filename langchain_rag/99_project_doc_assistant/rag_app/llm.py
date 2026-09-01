@@ -1,12 +1,9 @@
 """Pick the embeddings model and chat model the app will use.
 
-The app is designed to *always run*, even with no API key and no local model:
-
 * Embeddings — a real local model (MiniLM, via langchain-huggingface) when it's
-  installed; otherwise a deterministic fake so the pipeline still works offline.
-* Chat model — a real local LLM (Ollama) or a hosted OpenAI-compatible endpoint
-  when configured; otherwise a canned fake model so you can see the *shape* of an
-  answer without any setup.
+  installed; otherwise a deterministic fake so ingestion still works offline.
+* Chat model — OpenAI by default (needs ``OPENAI_API_KEY``), or a local Ollama
+  model when ``DOC_ASSISTANT_LLM=ollama``.
 
 Which one you get is controlled by environment variables, so the rest of the app
 never has to care.
@@ -17,7 +14,6 @@ from __future__ import annotations
 import os
 
 from langchain_core.embeddings import DeterministicFakeEmbedding, Embeddings
-from langchain_core.language_models import GenericFakeChatModel
 from langchain_core.language_models.chat_models import BaseChatModel
 
 
@@ -37,35 +33,20 @@ def get_embeddings() -> Embeddings:
 
 
 def get_chat_model() -> BaseChatModel:
-    """Return a chat model based on ``DOC_ASSISTANT_LLM`` (ollama | openai | fake).
-
-    Defaults to ``ollama`` if available, else falls back to a fake model so the
-    app always produces *something* without setup.
-    """
-    provider = os.environ.get("DOC_ASSISTANT_LLM", "ollama").lower()
+    """Return a chat model based on ``DOC_ASSISTANT_LLM`` (openai | ollama). Default: openai."""
+    provider = os.environ.get("DOC_ASSISTANT_LLM", "openai").lower()
 
     if provider == "ollama":
-        try:
-            from langchain_ollama import ChatOllama
+        from langchain_ollama import ChatOllama
 
-            model = os.environ.get("OLLAMA_MODEL", "qwen2:7b")
-            return ChatOllama(model=model, temperature=0)
-        except Exception:
-            provider = "fake"
+        return ChatOllama(model=os.environ.get("OLLAMA_MODEL", "qwen2:7b"), temperature=0)
 
-    if provider == "openai":
-        # Works with any OpenAI-compatible endpoint (e.g. the free NVIDIA API).
-        from langchain_openai import ChatOpenAI
+    # Default. Also works with any OpenAI-compatible endpoint (e.g. the free NVIDIA API):
+    # set OPENAI_BASE_URL and put that provider's key in OPENAI_API_KEY.
+    from langchain_openai import ChatOpenAI
 
-        return ChatOpenAI(
-            model=os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
-            base_url=os.environ.get("OPENAI_BASE_URL"),  # e.g. NVIDIA's endpoint
-            temperature=0,
-        )
-
-    # Fallback: a fake model that echoes a fixed answer. No network, no key.
-    return GenericFakeChatModel(
-        messages=iter(
-            ["[fake LLM] Set DOC_ASSISTANT_LLM=ollama (or openai) for a real answer."]
-        )
+    return ChatOpenAI(
+        model=os.environ.get("OPENAI_MODEL", "gpt-4o-mini"),
+        base_url=os.environ.get("OPENAI_BASE_URL"),
+        temperature=0,
     )

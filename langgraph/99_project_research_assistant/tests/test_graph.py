@@ -1,5 +1,14 @@
-"""Offline tests — no network, no API key. Run: pytest -q"""
+"""Graph-logic tests. The `write` node calls the chat model, so these need
+OPENAI_API_KEY (or LANGGRAPH_LLM=ollama with Ollama running). Run: pytest -q"""
+import os
+
+import pytest
 from langgraph.types import Command
+
+pytestmark = pytest.mark.skipif(
+    not (os.environ.get("OPENAI_API_KEY") or os.environ.get("LANGGRAPH_LLM") == "ollama"),
+    reason="set OPENAI_API_KEY (or LANGGRAPH_LLM=ollama) to run the graph tests",
+)
 
 from research_assistant.graph import build_graph
 

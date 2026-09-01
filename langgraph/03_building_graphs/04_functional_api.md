@@ -90,7 +90,7 @@ They share the same runtime — checkpointers, streaming, `interrupt`, and retri
 - ✅ Same runtime as the graph API — choose by whether structure or procedure dominates.
 - ✅ Self-check: what does `double(n)` return *before* you call `.result()` on it?
 
-→ Next: **[04 · Control flow](../04_control_flow/README.md)**
+→ Next: **[03-5 · MCP tools](05_mcp_tools.md)** — give the agent tools it didn't have to be written with.
 
 ## Exercises
 

@@ -19,7 +19,7 @@ flowchart LR
 `WebBaseLoader` uses **BeautifulSoup** to parse HTML. You already installed it if you followed Section 03; if not:
 
 ```bash
-pip install beautifulsoup4
+uv pip install beautifulsoup4
 ```
 
 > **Set a User-Agent.** Polite scrapers identify themselves. Set the `USER_AGENT` environment variable (e.g. `export USER_AGENT="my-rag-app/1.0"`) — otherwise the loader prints a warning. Some sites also block requests that don't send one.
@@ -158,8 +158,8 @@ A grounded answer built from a page we scraped seconds earlier. Swap the URL for
 
 | Loader | Import | What it adds |
 |--------|--------|--------------|
-| **FireCrawl** | `from langchain_community.document_loaders import FireCrawlLoader` | crawls a whole site → clean markdown; `scrape`/`crawl` modes; needs `FIRECRAWL_API_KEY` (`pip install firecrawl-py`) |
-| **Docling** | `from langchain_docling.loader import DoclingLoader` | strong document/HTML structure parsing (`pip install langchain-docling`) |
+| **FireCrawl** | `from langchain_community.document_loaders import FireCrawlLoader` | crawls a whole site → clean markdown; `scrape`/`crawl` modes; needs `FIRECRAWL_API_KEY` (`uv pip install firecrawl-py`) |
+| **Docling** | `from langchain_docling.loader import DoclingLoader` | strong document/HTML structure parsing (`uv pip install langchain-docling`) |
 | **Hyperbrowser / Browserbase** | provider packages | managed headless browsers with stealth mode for tough anti-scraping sites |
 
 > **Where to look:** LangChain's integration list at **[docs.langchain.com → integrations → document loaders](https://docs.langchain.com/oss/python/integrations/document_loaders)** is the authoritative, up-to-date catalog — new web loaders get added there. Start with `WebBaseLoader`; reach for a hosted service only when free loaders can't get clean content.
@@ -183,7 +183,7 @@ Scraping hits someone else's server. Be a good citizen:
 - ✅ Scrape **politely**: honour `robots.txt`, set a `USER_AGENT`, don't hammer servers, and cache results.
 - ✅ Self-check: why did "Example Domain" appear twice, and what fixes it? Which loader do you need for a JavaScript-heavy page?
 
-→ Next: **[Section 04 · Advanced RAG](../04_advanced_rag/README.md)** — hybrid retrieval, conversational RAG, evaluation, and serving. (Or jump to **[Section 05 · Tool calling & agents](../05_tool_calling_and_agents/README.md)** to let the model *decide* when to search.)
+→ Next: **[07 · pgvector on Postgres](07_pgvector_postgres.md)** — move off the toy store onto the production default.
 
 ## Exercises
 

@@ -4,7 +4,7 @@
 
 You've built graphs; now ship them. LangGraph's **Platform** turns a compiled graph into a running service with a REST API, persistence, a visual debugger (**Studio**), and client SDKs — plus a local dev server so you get all of that on your laptop first. This section covers local dev, the Server API + SDK, and deployment options.
 
-> **Note:** unlike the rest of the course, these tools involve a running server (and, for cloud, an account), so outputs here are configs and commands rather than offline runs. Everything you learned still applies — the Platform just *hosts* the graphs you already know how to build.
+> **Note:** unlike the rest of the course, these tools involve a running server (and, for cloud, an account), so outputs here are configs and commands rather than local runs. Everything you learned still applies — the Platform just *hosts* the graphs you already know how to build.
 
 ## Modules
 

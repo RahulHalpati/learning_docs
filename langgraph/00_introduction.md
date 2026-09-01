@@ -5,7 +5,7 @@
 
 This is the start of your journey into **LangGraph** — the framework that turns an LLM from a one-shot question-answerer into a **reliable, stateful agent** that can reason, loop, use tools, remember, and hand control to a human when it matters.
 
-No prior LangGraph knowledge is assumed. And you won't need an API key: everything in this course runs **offline** with a deterministic fake model, so you can watch the *graph* work without paying for or waiting on a real LLM.
+No prior LangGraph knowledge is assumed. The LLM in every example is OpenAI's `gpt-4o-mini` — an `OPENAI_API_KEY` and a few cents cover the whole course. The *graph* is what you'll be watching, and it runs the same on any model.
 
 ---
 
@@ -57,14 +57,15 @@ flowchart TD
 
 ---
 
-## Set up (offline, no API key)
+## Set up
 
 ```bash
-python -m venv .venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
-pip install "langgraph==1.2.9" "langchain-core==1.5.0"
+uv venv && source .venv/bin/activate     # Windows: .venv\Scripts\activate
+uv pip install "langgraph==1.2.9" "langchain-core==1.5.0" langchain-openai
+export OPENAI_API_KEY=sk-...
 ```
 
-That's all you need for every lesson. (Optional, for real local generation later: `pip install langchain-ollama` and `ollama pull qwen2.5:0.5b`.)
+That's all you need for every lesson. (Prefer a free local model? `uv pip install langchain-ollama`, `ollama pull qwen2.5:0.5b`, and swap `ChatOpenAI` for `ChatOllama` — see [01-3](01_foundations/03_environment_setup.md).)
 
 ### Your first graph
 
@@ -119,7 +120,7 @@ You just built a one-node graph: declared state, wrote a node, wired edges from 
 | "LangGraph replaces LangChain" | Complementary — LangChain = components, LangGraph = orchestration |
 | "It's only for chatbots" | Any stateful workflow: ETL, automation, multi-agent systems |
 | "Graphs are complex" | A basic graph is ~15 lines. Complexity is opt-in |
-| "You need OpenAI" | Works with any model — this whole course runs on a fake/local model |
+| "You need OpenAI" | Works with any chat model — we use OpenAI for convenience; a local Ollama model is a one-line swap |
 | "It's just a wrapper" | It provides state, persistence, and human-in-the-loop — things raw LLM APIs don't |
 
 ---

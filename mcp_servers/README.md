@@ -61,7 +61,22 @@ flowchart TD
 | 07 | [Test, ship & consume](07_test_ship_consume/) | 3 | In-memory tests; containerize; drive the server from a live agent | ~5 h |
 | 99 | [Capstone: notevault](99_capstone_notevault.md) | spec | Ship a secured, authenticated, tested MCP server from a spec | ~20–30 h |
 
-**Total:** ~31 h guided + the capstone. Every section gates the next with a build + a test task.
+**Total:** ~31 h guided + the capstone — but **most people don't need all of it**, see below.
+
+### ⭐ Job-ready core track (~5 h — MCP is a 1–2 day skill)
+
+MCP's actual surface is small: **decorate a typed Python function, get a tool any AI host can call.** If you already build backends (FastAPI, async, Docker), the *MCP-specific* learning is **sections 01–03 — about 5 hours**:
+
+1. [01 · Foundations](01_foundations/README.md) — the protocol + the resource/tool/prompt distinction *(skim; it's conceptual)*
+2. [02 · Your first server with FastMCP](02_first_server_fastmcp/README.md) — **the core skill.** A working stdio server, the Inspector, and tool design as a contract
+3. [03 · Resources, prompts & Context](03_resources_and_prompts/README.md) — the other two primitives
+4. Then [07-3 · Consuming from agents](07_test_ship_consume/03_consuming_from_agents.md) to close the loop
+
+That's a working MCP server you can demo. **Two evenings at 2 h/day gets you through 01–02; a third finishes 03.**
+
+**Sections 04–07 are production-service engineering, not MCP.** Async DB backends, OAuth 2.1, injection defense, testing, Docker — real job skills, but they're the *same* skills as [fastapi_complete](../fastapi_complete/) sections 05–11, applied to an MCP server. Do them when you need to *ship* a server publicly, or skip them if you've already done the FastAPI course and just want the protocol.
+
+**Highest-value single add-on:** [06 · Security](06_security/README.md) — tool outputs are untrusted input to a model, and the injection drill is the thing an interviewer actually probes.
 
 ## Related guides in this repo
 

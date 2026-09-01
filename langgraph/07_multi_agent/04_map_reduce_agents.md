@@ -27,9 +27,9 @@ from typing import TypedDict, Annotated
 import operator
 from langgraph.graph import StateGraph, START, END
 from langgraph.types import Send
-from langchain_core.language_models.fake_chat_models import FakeListChatModel
+from langchain_openai import ChatOpenAI
 
-worker_llm = FakeListChatModel(responses=[f"draft about topic {i}" for i in range(10)])
+worker_llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 class S(TypedDict):
     topics: list[str]
@@ -40,7 +40,7 @@ def assign(state: S):
     return [Send("worker", {"topic": t}) for t in state["topics"]]   # one agent per topic
 
 def worker(state: dict) -> dict:
-    draft = worker_llm.invoke(state["topic"]).content
+    draft = worker_llm.invoke(f"Write one sentence about {state['topic']}.").content
     return {"drafts": [f"[{state['topic']}] {draft}"]}
 
 def synthesize(state: S) -> dict:
@@ -57,14 +57,14 @@ out = g.compile().invoke({"topics": ["ai", "cloud", "security"], "drafts": [], "
 print(out["report"])
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 ```
-[ai] draft about topic 0 | [cloud] draft about topic 2 | [security] draft about topic 1
+[ai] Artificial intelligence enables machines to learn from data and perform tasks that once required human judgement. | [security] Security protects systems and data from unauthorised access and misuse. | [cloud] Cloud computing delivers on-demand computing resources over the internet.
 ```
 
 Three worker agents ran **concurrently**, each drafting its own topic; `synthesize` merged their drafts (gathered by the `operator.add` reducer) into one report. Scale `topics` to 50 and you get 50 parallel drafts, then one synthesis — no structural change.
 
-> **Note:** The topic-number suffixes (`topic 0`, `topic 2`, `topic 1`) come from the *fake* model handing out its canned responses as workers hit it concurrently — a nice illustration that the workers really do run in parallel. With a real model each worker generates from its own `topic`.
+> **Note:** The order of drafts in `report` can differ between runs — the workers finish concurrently and the `operator.add` reducer appends in completion order, a nice illustration that they really do run in parallel. Sort by topic in `synthesize` if you need a stable order.
 
 ---
 

@@ -7,7 +7,7 @@
 
 Real documents are PDFs, web pages, and long text files — not the tidy two-line strings we've been hand-typing. Two tools bridge that gap: **document loaders** read files into LangChain's standard `Document` form, and **text splitters** chop long documents into bite-sized **chunks**. Chunking is one of the highest-leverage decisions in RAG — get it wrong and retrieval returns half-thoughts or giant blobs. This module covers both, on the real capstone documents.
 
-## Document loaders: files → `Document`s
+## Document loaders: files → `Documents`
 
 A loader knows how to read one kind of source and return `Document`s with the text in `page_content` and useful `metadata` (like the file path):
 
@@ -149,5 +149,5 @@ With `chunk_overlap=0`, a fact split across the boundary (e.g. "...returns withi
 
 <details><summary>Solution</summary>
 
-(a) `DirectoryLoader` wrapping `TextLoader` — no extra deps. (b) `PyPDFLoader` — needs `pypdf` (`pip install pypdf`); it returns one `Document` per page, which you then split further. (c) `WebBaseLoader` — needs `beautifulsoup4` to parse HTML. All return `Document`s, so your split→embed→store steps are identical regardless of source.
+(a) `DirectoryLoader` wrapping `TextLoader` — no extra deps. (b) `PyPDFLoader` — needs `pypdf` (`uv pip install pypdf`); it returns one `Document` per page, which you then split further. (c) `WebBaseLoader` — needs `beautifulsoup4` to parse HTML. All return `Document`s, so your split→embed→store steps are identical regardless of source.
 </details>

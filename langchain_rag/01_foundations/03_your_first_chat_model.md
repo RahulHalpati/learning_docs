@@ -5,28 +5,27 @@
 
 ## Why this matters
 
-Everything in LangChain — every chain, every RAG pipeline — eventually calls a **chat model**. Learn its small, consistent interface now (`.invoke`, messages, `.stream`) and the rest of the course is just composing around it. We'll use the **fake model** so every snippet here runs with zero setup; swap in `ChatOllama` anywhere to get real answers.
+Everything in LangChain — every chain, every RAG pipeline — eventually calls a **chat model**. Learn its small, consistent interface now (`.invoke`, messages, `.stream`) and the rest of the course is just composing around it. We'll use `ChatOpenAI` throughout (set `OPENAI_API_KEY` as in the last module); swap in `ChatOllama` or `ChatNVIDIA` anywhere and nothing else changes.
 
 ## The chat model interface
 
 A modern LLM is a **chat model**: you give it messages, it returns an `AIMessage`. The one method you'll use most is `.invoke()`:
 
 ```python
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 
-# The fake model returns its canned messages in order — perfect for learning the shape.
-llm = GenericFakeChatModel(messages=iter(["A function is a reusable block of code."]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)   # reads OPENAI_API_KEY
 
 response = llm.invoke("What is a function?")
 print("type:", type(response).__name__)
 print("content:", response.content)
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 
 ```text
 type: AIMessage
-content: A function is a reusable block of code.
+content: A function is a reusable block of code that performs a specific task.
 ```
 
 Two things to notice:
@@ -34,7 +33,7 @@ Two things to notice:
 - You can pass a **plain string** and LangChain wraps it as a human message.
 - You get back an **`AIMessage` object**, not a string. The text is in `.content`. (Section 02's output parsers extract `.content` for you automatically.)
 
-> With a real model this would be `llm = ChatOllama(model="qwen2:7b")` and the answer would be the model's own words. The *interface is identical* — that's the swappability payoff.
+> Swap in `ChatOllama(model="qwen2:7b")` or `ChatNVIDIA(...)` and the rest of the snippet is unchanged. The *interface is identical* — that's the swappability payoff.
 
 ## Messages: system, human, AI
 
@@ -50,9 +49,9 @@ Passing a message list gives you control over the system instruction:
 
 ```python
 from langchain_core.messages import SystemMessage, HumanMessage
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 
-llm = GenericFakeChatModel(messages=iter(["Sure! A variable stores a value."]))
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 
 messages = [
     SystemMessage("You are a friendly Python tutor."),
@@ -61,10 +60,10 @@ messages = [
 print(llm.invoke(messages).content)
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 
 ```text
-Sure! A variable stores a value.
+Sure! A variable is a name that stores a value so you can use it later.
 ```
 
 The **system message** is how you set behaviour ("answer only from the context, say 'I don't know' otherwise") — which is exactly how we'll keep RAG answers grounded later.
@@ -81,23 +80,23 @@ flowchart LR
 For a responsive UI you often want tokens *as they're generated* rather than waiting for the whole answer. Use `.stream()`, which yields chunks:
 
 ```python
-from langchain_core.language_models import GenericFakeChatModel
+from langchain_openai import ChatOpenAI
 
-llm = GenericFakeChatModel(messages=iter(["Hello there friend"]))
-print("stream chunks:", [chunk.content for chunk in llm.stream("hi")])
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+print("stream chunks:", [chunk.content for chunk in llm.stream("Say hello in three words.")])
 ```
 
-**Output (real run):**
+**Output (representative — your wording will differ):**
 
 ```text
-stream chunks: ['Hello', ' ', 'there', ' ', 'friend']
+stream chunks: ['', 'Hello', ' there', ',', ' friend', '!', '']
 ```
 
-The fake model streams word-by-word; a real model streams its actual tokens. In an app you'd print each chunk as it arrives (`print(chunk.content, end="", flush=True)`) to get the familiar "typing" effect.
+Chunks are the model's actual tokens (often sub-word pieces). The empty first and last chunks carry metadata — the role and the finish reason — not text. In an app you'd print each chunk as it arrives (`print(chunk.content, end="", flush=True)`) to get the familiar "typing" effect.
 
 ## The methods you'll actually use
 
-Every chat model (fake, Ollama, hosted) shares these — learn them once:
+Every chat model (OpenAI, Ollama, NVIDIA, Claude) shares these — learn them once:
 
 | Method | Returns | Use |
 |--------|---------|-----|
@@ -107,9 +106,9 @@ Every chat model (fake, Ollama, hosted) shares these — learn them once:
 
 `input` can be a string, a list of messages, or (Section 02) the output of a prompt template. Because the interface is identical across providers, switching LLMs never changes these calls.
 
-## Try it with a real model (optional)
+## Try it with a local model (optional)
 
-If you set up Ollama in the last module, see a genuine answer:
+If you installed Ollama in the last module, the same code runs against a local model:
 
 ```python
 from langchain_ollama import ChatOllama          # needs: ollama + a pulled model
@@ -117,34 +116,34 @@ llm = ChatOllama(model="qwen2:7b", temperature=0)
 print(llm.invoke("In one sentence, what is Python?").content)
 ```
 
-This needs a running Ollama and a pulled model, so it's **not run here** — but it's the same `.invoke()` you just used. Everything you learned with the fake model transfers verbatim.
+This needs a running Ollama and a pulled model — but it's the same `.invoke()` you just used; everything above transfers verbatim.
 
 ## Recap & next
 
 - ✅ A **chat model** takes messages and returns an **`AIMessage`** (text in `.content`). `.invoke()` is the everyday call.
 - ✅ **Messages** have roles: `SystemMessage` (rules/persona), `HumanMessage` (input), `AIMessage` (reply). The system message is how you'll keep RAG grounded.
 - ✅ `.stream()` yields chunks for a live "typing" effect; `.batch()` handles many inputs.
-- ✅ The interface is **identical** across fake/Ollama/hosted — swap providers without changing call sites.
+- ✅ The interface is **identical** across OpenAI/Ollama/NVIDIA/Claude — swap providers without changing call sites.
 - ✅ Self-check: what type does `.invoke()` return, and where's the text? What's the system message for?
 
 → Next: **[Section 02 · LangChain core](../02_langchain_core/README.md)** — prompts, the LCEL `|` pipe, output parsers, and memory.
 
 ## Exercises
 
-1. **Change the persona.** Using the fake model is fine for plumbing, but try this with a *real* model (Ollama) if you have one: give a `SystemMessage` that says "You always answer in exactly five words," then ask "What is LangChain?" Did the system message change the style?
+1. **Change the persona.** Give a `SystemMessage` that says "You always answer in exactly five words," then ask "What is LangChain?" Did the system message change the style?
 
 <details><summary>Solution</summary>
 
 ```python
-from langchain_ollama import ChatOllama
+from langchain_openai import ChatOpenAI
 from langchain_core.messages import SystemMessage, HumanMessage
-llm = ChatOllama(model="qwen2:7b", temperature=0)
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
 msgs = [SystemMessage("You always answer in exactly five words."),
         HumanMessage("What is LangChain?")]
 print(llm.invoke(msgs).content)
 ```
 
-With a real model the system message steers the format (you'll get a terse ~5-word reply). This demonstrates why the system message is your main control knob — we'll use it to enforce "answer only from the context" in RAG.
+The system message steers the format (you'll get a terse ~5-word reply). This demonstrates why the system message is your main control knob — we'll use it to enforce "answer only from the context" in RAG.
 </details>
 
 2. **Stream the typing effect.** Adapt the streaming snippet to print chunks on one line as they arrive, with no list brackets, like a chatbot typing.
@@ -152,15 +151,15 @@ With a real model the system message steers the format (you'll get a terse ~5-wo
 <details><summary>Solution</summary>
 
 ```python
-from langchain_core.language_models import GenericFakeChatModel
-llm = GenericFakeChatModel(messages=iter(["Hello there friend"]))
-for chunk in llm.stream("hi"):
+from langchain_openai import ChatOpenAI
+llm = ChatOpenAI(model="gpt-4o-mini", temperature=0)
+for chunk in llm.stream("Say hello in three words."):
     print(chunk.content, end="", flush=True)
 print()   # newline at the end
-# prints: Hello there friend
+# prints the reply as it streams, e.g.: Hello there, friend!
 ```
 
-`end=""` keeps it on one line and `flush=True` shows each chunk immediately. With a real model this is the live "typing" effect users expect.
+`end=""` keeps it on one line and `flush=True` shows each chunk immediately. This is the live "typing" effect users expect.
 </details>
 
 3. **Predict the type.** Before running, what type is `llm.invoke("hi")`, and what's the difference between `llm.invoke("hi")` and `llm.invoke("hi").content`?

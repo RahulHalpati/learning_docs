@@ -1,12 +1,12 @@
 # 99 · Capstone — linkstash-cloud
 
-The `linkstash` link shortener, backed by AWS services running on LocalStack:
+The `linkstash` link shortener, backed by AWS services running on Floci:
 links in **DynamoDB**, backups in **S3**, events on **SQS**, secret in **Secrets
 Manager**, config in **SSM Parameter Store** — provisioned with **OpenTofu** and
 exercised with **boto3**. Real AWS SDK + IaC, zero cloud bill.
 
 ```
-tofu apply → DynamoDB + S3 + SQS + Secrets Manager + SSM on LocalStack (6 resources)
+tofu apply → DynamoDB + S3 + SQS + Secrets Manager + SSM on Floci (6 resources)
 python -m app.demo → load config from AWS, put/get a link, back up to S3, drain an SQS event
 pytest → 7 integration tests, green
 ```
@@ -22,7 +22,7 @@ pytest → 7 integration tests, green
 │   ├── config.py      # load secret (Secrets Manager) + table name (SSM) at runtime
 │   └── demo.py        # end-to-end: load config, put/get/backup/drain demo
 ├── infra/
-│   └── main.tf        # aws provider → LocalStack; DynamoDB + S3 + SQS + Secrets Manager + SSM
+│   └── main.tf        # aws provider → Floci; DynamoDB + S3 + SQS + Secrets Manager + SSM
 ├── tests/
 │   ├── test_storage.py  # 4 storage integration tests
 │   └── test_config.py   # 3 config-from-AWS tests (skip unless AWS_ENDPOINT_URL set)
@@ -35,19 +35,19 @@ pytest → 7 integration tests, green
 ## Quick start
 
 ```bash
-make install     # boto3, localstack, awslocal, awscli
-make up          # docker run localstack/localstack:3.8.1 (token-free community)
-make apply       # tofu → DynamoDB + S3 + SQS on LocalStack
+make install     # boto3, awslocal, awscli
+make up          # docker run floci/floci:latest (free, no token)
+make apply       # tofu → DynamoDB + S3 + SQS on Floci
 make seed        # boto3 demo
 make verify      # awslocal lists the resources
 make test        # pytest integration tests
-make down        # stop LocalStack
+make down        # stop Floci
 ```
 
-The `Makefile` exports the standard LocalStack env for you:
+The `Makefile` exports the standard Floci env for you:
 `AWS_ENDPOINT_URL=http://localhost:4566`, dummy creds, `us-east-1`.
 
-### Verified output (2026-07-16, LocalStack 3.8.1, OpenTofu v1.12.4)
+### Verified output (2026-09-01, Floci latest, OpenTofu v1.12.4)
 
 ```
 $ tofu apply
@@ -81,18 +81,18 @@ $ pytest -q
 
 `storage.py` sets `endpoint_url=os.environ.get("AWS_ENDPOINT_URL") or None`, and
 `infra/main.tf` has an `endpoints{}` block. **Remove those and the identical code +
-config run against real AWS.** LocalStack is a target you swap in for dev/test — not
+config run against real AWS.** Floci is a target you swap in for dev/test — not
 a different way of writing AWS code.
 
 ---
 
 ## ⚠️ Notes
 
-- **Account requirement:** LocalStack's 2026 CLI needs a free token; this capstone
-  pins **`localstack:3.8.1`** to stay signup-free ([04-3](../04_testing_and_ci/03_gotchas_and_pro.md)).
+- **Why Floci:** LocalStack sunset its free Community edition in March 2026; Floci
+  is the free, drop-in replacement ([05-3](../05_testing_and_ci/03_gotchas_and_pro.md)).
 - **Ephemeral:** state is lost when the container stops — `make apply` re-creates
   it. That's ideal for tests.
 - **Lambda:** the app runs as a normal process; a serverless variant is the stretch
-  exercise in [02-4](../02_core_services/04_lambda_apigateway.md).
+  exercise in [03-4](../03_core_services/04_lambda_apigateway.md).
 
 → Course starts at the **[README](../README.md)** → **[00 · Introduction](../00_introduction.md)**.
